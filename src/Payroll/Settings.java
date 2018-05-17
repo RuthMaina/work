@@ -58,7 +58,7 @@ public class Settings extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Castellar", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("Settings");
+        jLabel8.setText("EMPLOYEES");
 
         javax.swing.GroupLayout HeaderLayout = new javax.swing.GroupLayout(Header);
         Header.setLayout(HeaderLayout);

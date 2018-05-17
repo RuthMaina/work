@@ -29,6 +29,7 @@ public class Employees extends javax.swing.JFrame {
     private void initComponents() {
 
         ShowEmployees = new javax.swing.JDialog();
+        jPanel2 = new javax.swing.JPanel();
         Header = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -69,20 +70,28 @@ public class Employees extends javax.swing.JFrame {
         btnView = new javax.swing.JLabel();
         btnBack = new javax.swing.JLabel();
 
+        ShowEmployees.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        ShowEmployees.setMinimumSize(new java.awt.Dimension(848, 506));
+        ShowEmployees.setModal(true);
+        ShowEmployees.setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        ShowEmployees.setPreferredSize(new java.awt.Dimension(848, 506));
+
+        jPanel2.setLayout(null);
+
         javax.swing.GroupLayout ShowEmployeesLayout = new javax.swing.GroupLayout(ShowEmployees.getContentPane());
         ShowEmployees.getContentPane().setLayout(ShowEmployeesLayout);
         ShowEmployeesLayout.setHorizontalGroup(
             ShowEmployeesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 694, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         ShowEmployeesLayout.setVerticalGroup(
             ShowEmployeesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 535, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
-        setMinimumSize(new java.awt.Dimension(845, 523));
+        setMinimumSize(new java.awt.Dimension(848, 506));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
 
         Header.setBackground(new java.awt.Color(18, 19, 34));
@@ -516,6 +525,7 @@ public class Employees extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblImage;
     private javax.swing.JPanel personalInfo;

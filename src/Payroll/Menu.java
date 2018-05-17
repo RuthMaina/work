@@ -339,6 +339,7 @@ for (Component C : panel.getComponents())
         // TODO add your handling code here:
         Employees e = new Employees();
         e.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnEmployeesMouseClicked
 
     private void btnDepartmentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDepartmentMouseClicked

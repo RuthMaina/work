@@ -31,9 +31,9 @@ public class Employees extends javax.swing.JFrame {
         ShowEmployees = new javax.swing.JDialog();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblEmp = new javax.swing.JTable();
         jLabel14 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtSearch = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         Header = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -84,8 +84,8 @@ public class Employees extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblEmp.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblEmp.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"1", "Rononoa Zoro", "Male", "435, Nbi", "0987654", "IT", "Manager"},
                 {null, null, null, null, null, null, null},
@@ -104,26 +104,27 @@ public class Employees extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setRowHeight(20);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(20);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(20);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
-            jTable1.getColumnModel().getColumn(5).setResizable(false);
-            jTable1.getColumnModel().getColumn(6).setResizable(false);
+        tblEmp.setRowHeight(20);
+        tblEmp.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(tblEmp);
+        if (tblEmp.getColumnModel().getColumnCount() > 0) {
+            tblEmp.getColumnModel().getColumn(0).setResizable(false);
+            tblEmp.getColumnModel().getColumn(0).setPreferredWidth(20);
+            tblEmp.getColumnModel().getColumn(1).setResizable(false);
+            tblEmp.getColumnModel().getColumn(2).setResizable(false);
+            tblEmp.getColumnModel().getColumn(2).setPreferredWidth(20);
+            tblEmp.getColumnModel().getColumn(3).setResizable(false);
+            tblEmp.getColumnModel().getColumn(4).setResizable(false);
+            tblEmp.getColumnModel().getColumn(5).setResizable(false);
+            tblEmp.getColumnModel().getColumn(6).setResizable(false);
         }
 
         jLabel14.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel14.setText("Search");
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Search_20px.png"))); // NOI18N
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextField1.setToolTipText("Search by employee name");
+        txtSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtSearch.setToolTipText("Search by employee name");
 
         jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -134,7 +135,7 @@ public class Employees extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 844, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 856, Short.MAX_VALUE)
                 .addGap(4, 4, 4))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
@@ -143,9 +144,9 @@ public class Employees extends javax.swing.JFrame {
                         .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(180, 180, 180))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(jTextField1)))
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSearch)))
                 .addGap(174, 174, 174))
         );
         jPanel2Layout.setVerticalGroup(
@@ -156,9 +157,9 @@ public class Employees extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
                 .addGap(3, 3, 3))
         );
 
@@ -627,15 +628,15 @@ public class Employees extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblImage;
     private javax.swing.JPanel personalInfo;
+    private javax.swing.JTable tblEmp;
     private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtFname;
     private javax.swing.JTextArea txtInfo;
     private javax.swing.JTextField txtLname;
     private javax.swing.JTextField txtPhone;
+    private javax.swing.JTextField txtSearch;
     private javax.swing.JPanel workInfo;
     // End of variables declaration//GEN-END:variables
 }

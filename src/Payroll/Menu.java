@@ -29,7 +29,7 @@ for (Component C : panel.getComponents())
 {    
     if (C instanceof JLabel){
         ((JLabel) C).setBackground(new Color(255, 255, 255));
-        label.setBackground(new Color(135, 132, 188));
+        label.setBackground(new Color(96, 96, 96));
     } else {
         label.setBackground(new Color(255, 255, 255));
     }
@@ -346,6 +346,7 @@ for (Component C : panel.getComponents())
         // TODO add your handling code here:
         Department d = new Department();
         d.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnDepartmentMouseClicked
 
     private void btnAttendanceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAttendanceMouseClicked

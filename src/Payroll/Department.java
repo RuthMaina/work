@@ -6,6 +6,7 @@
 package Payroll;
 
 import static Payroll.Login.user;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -91,7 +92,7 @@ public class Department extends javax.swing.JFrame {
         jLabel7.setText("Payroll System");
         jLabel7.setIconTextGap(5);
 
-        jLabel8.setFont(new java.awt.Font("Castellar", 0, 24)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Copperplate Gothic Light", 0, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("DEPARTMENTS");
@@ -133,8 +134,14 @@ public class Department extends javax.swing.JFrame {
         btnClr.setForeground(new java.awt.Color(255, 255, 255));
         btnClr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnClr.setText("Clear Fields");
+        btnClr.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnClr.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnClr.setOpaque(true);
+        btnClr.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnClrMouseClicked(evt);
+            }
+        });
         jPanel3.add(btnClr);
 
         btnSave.setBackground(new java.awt.Color(45, 43, 63));
@@ -142,6 +149,7 @@ public class Department extends javax.swing.JFrame {
         btnSave.setForeground(new java.awt.Color(255, 255, 255));
         btnSave.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnSave.setText("Save");
+        btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSave.setOpaque(true);
         jPanel3.add(btnSave);
 
@@ -150,6 +158,7 @@ public class Department extends javax.swing.JFrame {
         btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnUpdate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnUpdate.setText("Update");
+        btnUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUpdate.setOpaque(true);
         jPanel3.add(btnUpdate);
 
@@ -158,6 +167,7 @@ public class Department extends javax.swing.JFrame {
         btnDel.setForeground(new java.awt.Color(255, 255, 255));
         btnDel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnDel.setText("Delete");
+        btnDel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDel.setOpaque(true);
         jPanel3.add(btnDel);
 
@@ -166,6 +176,7 @@ public class Department extends javax.swing.JFrame {
         btnBack.setForeground(new java.awt.Color(255, 255, 255));
         btnBack.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnBack.setText("Back");
+        btnBack.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBack.setOpaque(true);
         btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -243,7 +254,6 @@ public class Department extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblDep.setRowHeight(20);
         jScrollPane1.setViewportView(tblDep);
         if (tblDep.getColumnModel().getColumnCount() > 0) {
             tblDep.getColumnModel().getColumn(0).setResizable(false);
@@ -491,7 +501,6 @@ public class Department extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblDep1.setRowHeight(20);
         jScrollPane4.setViewportView(tblDep1);
         if (tblDep1.getColumnModel().getColumnCount() > 0) {
             tblDep1.getColumnModel().getColumn(0).setResizable(false);
@@ -574,6 +583,13 @@ public class Department extends javax.swing.JFrame {
     private void btnYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnYesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnYesActionPerformed
+
+    private void btnClrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClrMouseClicked
+        // TODO add your handling code here:
+       txtSearch.setText("");
+       txtName.setText("");
+       txtDes.setText("");
+    }//GEN-LAST:event_btnClrMouseClicked
 
     /**
      * @param args the command line arguments

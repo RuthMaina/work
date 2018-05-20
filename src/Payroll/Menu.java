@@ -304,7 +304,7 @@ for (Component C : panel.getComponents())
         jLabel7.setText("Administrator");
         jLabel7.setIconTextGap(5);
 
-        jLabel8.setFont(new java.awt.Font("Castellar", 0, 30)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Copperplate Gothic Light", 0, 30)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("PAYROLL SYSTEM");

@@ -196,16 +196,16 @@ public class Login extends javax.swing.JFrame {
             Connection con = DBConnect.connect();
             try {
                 // Check the username and passwords
-                ps = con.prepareStatement("SELECT * FROM user WHERE userName = ? AND password = ?");
+                ps = con.prepareStatement("SELECT * FROM `user` WHERE `username` = ? AND `password` = ?");
                 ps.setString(1, txtUserName.getText());
                 ps.setString(2, String.valueOf(txtPass.getPassword()));
                 rs = ps.executeQuery();
                 if (rs.next()) {
                     // Fetch values
-                    user = rs.getString("userName");
+                    user = rs.getString("username");
                     type = rs.getString("type");
                     
-                    if (cboType.equals(cboType.getSelectedItem()) && type.equals("Administrator")) {
+                    if (type.equals(cboType.getSelectedItem()) && type.equals("Administrator")) {
                         // Open the admin module
                         Menu m = new Menu(user);
                         m.setVisible(true);
@@ -225,10 +225,6 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Could not log in to the system. Make sure the server is on");
             }
         }
-        
-        Menu m = new Menu(user);
-                        m.setVisible(true);
-                        this.dispose();
     }//GEN-LAST:event_jLabel9MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked

@@ -5,12 +5,14 @@
  */
 package Payroll;
 
+import static Payroll.Login.user;
+
 /**
  *
  * @author Ruth
  */
 public class Department extends javax.swing.JFrame {
-    Menu m = new Menu();
+    Menu m = new Menu(user);
 
     /**
      * Creates new form Employees
@@ -28,7 +30,6 @@ public class Department extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        ShowEmployees = new javax.swing.JDialog();
         btnStatus = new javax.swing.ButtonGroup();
         btnRate = new javax.swing.ButtonGroup();
         Header = new javax.swing.JPanel();
@@ -77,17 +78,6 @@ public class Department extends javax.swing.JFrame {
         tblDep1 = new javax.swing.JTable();
         txtSearch1 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-
-        javax.swing.GroupLayout ShowEmployeesLayout = new javax.swing.GroupLayout(ShowEmployees.getContentPane());
-        ShowEmployees.getContentPane().setLayout(ShowEmployeesLayout);
-        ShowEmployeesLayout.setHorizontalGroup(
-            ShowEmployeesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        ShowEmployeesLayout.setVerticalGroup(
-            ShowEmployeesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -257,9 +247,9 @@ public class Department extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblDep);
         if (tblDep.getColumnModel().getColumnCount() > 0) {
             tblDep.getColumnModel().getColumn(0).setResizable(false);
-            tblDep.getColumnModel().getColumn(0).setPreferredWidth(40);
+            tblDep.getColumnModel().getColumn(0).setPreferredWidth(10);
             tblDep.getColumnModel().getColumn(1).setResizable(false);
-            tblDep.getColumnModel().getColumn(1).setPreferredWidth(50);
+            tblDep.getColumnModel().getColumn(1).setPreferredWidth(250);
         }
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -267,7 +257,6 @@ public class Department extends javax.swing.JFrame {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Search_20px.png"))); // NOI18N
 
         txtSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtSearch.setText("jTextField1");
         txtSearch.setToolTipText("Search by department name");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -331,6 +320,11 @@ public class Department extends javax.swing.JFrame {
         btnStatus.add(btnYes);
         btnYes.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnYes.setText("Yes");
+        btnYes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnYesActionPerformed(evt);
+            }
+        });
 
         btnNo.setBackground(new java.awt.Color(255, 255, 255));
         btnStatus.add(btnNo);
@@ -414,11 +408,11 @@ public class Department extends javax.swing.JFrame {
                     .addComponent(btnYes)
                     .addComponent(btnNo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnCash)
-                        .addComponent(btnPer)))
+                        .addComponent(btnPer))
+                    .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtRate1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -513,8 +507,7 @@ public class Department extends javax.swing.JFrame {
         }
 
         txtSearch1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtSearch1.setText("jTextField1");
-        txtSearch1.setToolTipText("Search by department name");
+        txtSearch1.setToolTipText("Search by name");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -578,6 +571,10 @@ public class Department extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnBack1MouseClicked
 
+    private void btnYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnYesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnYesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -616,11 +613,8 @@ public class Department extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Header;
-    private javax.swing.JDialog ShowEmployees;
     private javax.swing.JLabel btnBack;
     private javax.swing.JLabel btnBack1;
-    private javax.swing.JLabel btnBrowse;
-    private javax.swing.JLabel btnBrowse1;
     private javax.swing.JRadioButton btnCash;
     private javax.swing.JLabel btnClr;
     private javax.swing.JLabel btnClr1;
@@ -635,22 +629,6 @@ public class Department extends javax.swing.JFrame {
     private javax.swing.JLabel btnUpdate;
     private javax.swing.JLabel btnUpdate1;
     private javax.swing.JRadioButton btnYes;
-    private javax.swing.JComboBox<String> cboGender;
-    private javax.swing.JComboBox<String> cboGender1;
-    private com.toedter.calendar.JDateChooser dob;
-    private com.toedter.calendar.JDateChooser dob1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
@@ -660,10 +638,8 @@ public class Department extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -672,26 +648,14 @@ public class Department extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JLabel lblImage;
-    private javax.swing.JLabel lblImage1;
-    private javax.swing.JPanel personalInfo;
-    private javax.swing.JPanel personalInfo1;
     private javax.swing.JPanel personalInfo2;
     private javax.swing.JPanel personalInfo3;
     private javax.swing.JTable tblDep;
     private javax.swing.JTable tblDep1;
-    private javax.swing.JTextField txtAddress;
-    private javax.swing.JTextField txtAddress1;
     private javax.swing.JTextField txtDep;
     private javax.swing.JTextArea txtDes;
-    private javax.swing.JTextField txtFname;
-    private javax.swing.JTextField txtFname1;
-    private javax.swing.JTextField txtLname;
-    private javax.swing.JTextField txtLname1;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtName1;
-    private javax.swing.JTextField txtPhone;
-    private javax.swing.JTextField txtPhone1;
     private javax.swing.JTextField txtRate1;
     private javax.swing.JTextField txtSalary;
     private javax.swing.JTextField txtSearch;

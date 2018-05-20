@@ -86,7 +86,7 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Images/User Orange.png"/>
+                  <Image iconType="3" name="/Images/icons8-team-75.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Employees"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -114,7 +114,7 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Images/User Orange.png"/>
+                  <Image iconType="3" name="/Images/icons8-department-75.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Departments"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -136,9 +136,9 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Images/User Orange.png"/>
+                  <Image iconType="3" name="/Images/icons8-event-accepted-tentatively-75.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;Attendance &lt;br&gt;and Leave&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;Attendance &lt;br&gt;and Leave&lt;/html&gt;" noResource="true"/>
                 <Property name="toolTipText" type="java.lang.String" value=""/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="opaque" type="boolean" value="true"/>
@@ -159,7 +159,7 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Images/User Orange.png"/>
+                  <Image iconType="3" name="/Images/icons8-beach-75.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Holidays"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -181,7 +181,7 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Images/User Orange.png"/>
+                  <Image iconType="3" name="/Images/icons8-time-card-75.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Overtime"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -203,7 +203,7 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Images/User Orange.png"/>
+                  <Image iconType="3" name="/Images/icons8-deposit-75.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Allowances"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -225,7 +225,7 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Images/User Orange.png"/>
+                  <Image iconType="3" name="/Images/icons8-withdrawal-75.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Deductions"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -247,7 +247,7 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Images/User Orange.png"/>
+                  <Image iconType="3" name="/Images/icons8-statistics-75.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&lt;html&gt;Analysis&lt;br&gt; and Reports&lt;/html&gt;"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -269,7 +269,7 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Images/User Orange.png"/>
+                  <Image iconType="3" name="/Images/icons8-data-backup-75.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="&lt;html&gt;Backup and&lt;br&gt;Restore&lt;/html&gt;"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -291,7 +291,7 @@
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Images/User Orange.png"/>
+                  <Image iconType="3" name="/Images/icons8-settings-75.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Settings"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>

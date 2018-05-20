@@ -5,11 +5,24 @@
  */
 package Payroll;
 
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Ruth
  */
 public class Login extends javax.swing.JFrame {
+    PreparedStatement ps;
+    ResultSet rs;
+    static String user;
+    static String type;
 
     /**
      * Creates new form Login
@@ -38,7 +51,7 @@ public class Login extends javax.swing.JFrame {
         txtPass = new javax.swing.JPasswordField();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel8 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cboType = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
@@ -57,19 +70,19 @@ public class Login extends javax.swing.JFrame {
         txtUserName.setToolTipText("Username");
         txtUserName.setBorder(null);
         jPanel3.add(txtUserName);
-        txtUserName.setBounds(60, 190, 235, 30);
+        txtUserName.setBounds(70, 220, 235, 30);
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Account_20px.png"))); // NOI18N
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel3.add(jLabel2);
-        jLabel2.setBounds(30, 140, 30, 30);
+        jLabel2.setBounds(40, 170, 30, 30);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Lock 2_25px.png"))); // NOI18N
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel3.add(jLabel1);
-        jLabel1.setBounds(30, 240, 30, 30);
+        jLabel1.setBounds(40, 270, 30, 30);
 
         jLabel3.setFont(new java.awt.Font("Castellar", 0, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 51));
@@ -77,22 +90,22 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
         jLabel3.setText("LOGIN");
         jPanel3.add(jLabel3);
-        jLabel3.setBounds(70, 20, 190, 100);
+        jLabel3.setBounds(80, 30, 190, 100);
 
         jSeparator1.setForeground(new java.awt.Color(104, 104, 104));
         jPanel3.add(jSeparator1);
-        jSeparator1.setBounds(60, 270, 235, 5);
+        jSeparator1.setBounds(70, 300, 235, 5);
 
         jSeparator2.setForeground(new java.awt.Color(104, 104, 104));
         jPanel3.add(jSeparator2);
-        jSeparator2.setBounds(60, 220, 235, 5);
+        jSeparator2.setBounds(70, 250, 235, 5);
 
         txtPass.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtPass.setForeground(new java.awt.Color(0, 0, 51));
         txtPass.setToolTipText("Password");
         txtPass.setBorder(null);
         jPanel3.add(txtPass);
-        txtPass.setBounds(60, 240, 235, 30);
+        txtPass.setBounds(70, 270, 235, 30);
 
         jCheckBox1.setBackground(new java.awt.Color(255, 255, 255));
         jCheckBox1.setToolTipText("Show password");
@@ -106,21 +119,21 @@ public class Login extends javax.swing.JFrame {
             }
         });
         jPanel3.add(jCheckBox1);
-        jCheckBox1.setBounds(300, 245, 25, 25);
+        jCheckBox1.setBounds(310, 280, 25, 25);
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Male User_25px.png"))); // NOI18N
         jLabel8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel3.add(jLabel8);
-        jLabel8.setBounds(30, 190, 30, 30);
+        jLabel8.setBounds(40, 220, 30, 30);
 
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jComboBox1.setForeground(new java.awt.Color(0, 0, 51));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrator", "Employee" }));
-        jComboBox1.setBorder(null);
-        jComboBox1.setOpaque(false);
-        jPanel3.add(jComboBox1);
-        jComboBox1.setBounds(60, 140, 240, 30);
+        cboType.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cboType.setForeground(new java.awt.Color(0, 0, 51));
+        cboType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrator", "User" }));
+        cboType.setBorder(null);
+        cboType.setOpaque(false);
+        jPanel3.add(cboType);
+        cboType.setBounds(70, 170, 240, 30);
 
         jLabel9.setBackground(new java.awt.Color(45, 43, 63));
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -136,7 +149,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
         jPanel3.add(jLabel9);
-        jLabel9.setBounds(100, 290, 150, 35);
+        jLabel9.setBounds(110, 320, 150, 35);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -148,17 +161,19 @@ public class Login extends javax.swing.JFrame {
             }
         });
         jPanel3.add(jLabel4);
-        jLabel4.setBounds(322, 0, 20, 25);
+        jLabel4.setBounds(350, 0, 20, 25);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -175,9 +190,41 @@ public class Login extends javax.swing.JFrame {
 
     private void jLabel9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MouseClicked
         // TODO add your handling code here:
-        Menu m = new Menu();
-        m.setVisible(true);
-        this.dispose();
+        if(txtUserName.getText().equals("") || txtPass.getPassword().equals("")){
+            JOptionPane.showMessageDialog(null, "Some fields are empty");
+        } else{
+            Connection con = DBConnect.connect();
+            try {
+                // Check the username and passwords
+                ps = con.prepareStatement("SELECT * FROM user WHERE userName = ? AND password = ?");
+                ps.setString(1, txtUserName.getText());
+                ps.setString(2, String.valueOf(txtPass.getPassword()));
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    // Fetch values
+                    user = rs.getString("userName");
+                    type = rs.getString("type");
+                    
+                    if (cboType.equals(cboType.getSelectedItem()) && type.equals("Administrator")) {
+                        // Open the admin module
+                        Menu m = new Menu(user);
+                        m.setVisible(true);
+                        con.close();
+                        this.dispose();
+                    } else if (type.equals(cboType.getSelectedItem()) && type.equals("User")){
+                        // Open the employee module
+                        System.out.println("This is the user side");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Login Failed! Wrong Credentials");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Login Failed! Wrong Credentials");
+                }
+            } catch (HeadlessException | SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null, "Could not log in to the system. Make sure the server is on");
+            }
+        }
     }//GEN-LAST:event_jLabel9MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
@@ -221,8 +268,8 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cboType;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

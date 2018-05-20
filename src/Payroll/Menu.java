@@ -19,8 +19,11 @@ public class Menu extends javax.swing.JFrame {
     /**
      * Creates new form Menu
      */
-    public Menu() {
+    public Menu(){}
+    
+    public Menu(String user) {
         initComponents();
+        jLabel7.setText(user);
     }
     
     // Change the color of the selected menu item
@@ -73,7 +76,7 @@ for (Component C : panel.getComponents())
         btnEmployees.setBackground(new java.awt.Color(255, 255, 255));
         btnEmployees.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnEmployees.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnEmployees.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
+        btnEmployees.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-team-75.png"))); // NOI18N
         btnEmployees.setText("Employees");
         btnEmployees.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnEmployees.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
@@ -95,7 +98,7 @@ for (Component C : panel.getComponents())
         btnDepartment.setBackground(new java.awt.Color(255, 255, 255));
         btnDepartment.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnDepartment.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnDepartment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
+        btnDepartment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-department-75.png"))); // NOI18N
         btnDepartment.setText("Departments");
         btnDepartment.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnDepartment.setOpaque(true);
@@ -115,8 +118,8 @@ for (Component C : panel.getComponents())
         btnAttendance.setBackground(new java.awt.Color(255, 255, 255));
         btnAttendance.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnAttendance.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnAttendance.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
-        btnAttendance.setText("<html>Attendance <br>and Leave</html>");
+        btnAttendance.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-event-accepted-tentatively-75.png"))); // NOI18N
+        btnAttendance.setText("<html>Attendance <br>and Leave</html>"); // NOI18N
         btnAttendance.setToolTipText("");
         btnAttendance.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnAttendance.setOpaque(true);
@@ -136,7 +139,7 @@ for (Component C : panel.getComponents())
         btnHolidays.setBackground(new java.awt.Color(255, 255, 255));
         btnHolidays.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnHolidays.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnHolidays.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
+        btnHolidays.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-beach-75.png"))); // NOI18N
         btnHolidays.setText("Holidays");
         btnHolidays.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnHolidays.setOpaque(true);
@@ -156,7 +159,7 @@ for (Component C : panel.getComponents())
         btnOvertime.setBackground(new java.awt.Color(255, 255, 255));
         btnOvertime.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnOvertime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnOvertime.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
+        btnOvertime.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-time-card-75.png"))); // NOI18N
         btnOvertime.setText("Overtime");
         btnOvertime.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnOvertime.setOpaque(true);
@@ -176,7 +179,7 @@ for (Component C : panel.getComponents())
         btnAllowances.setBackground(new java.awt.Color(255, 255, 255));
         btnAllowances.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnAllowances.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnAllowances.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
+        btnAllowances.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-deposit-75.png"))); // NOI18N
         btnAllowances.setText("Allowances");
         btnAllowances.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnAllowances.setOpaque(true);
@@ -196,7 +199,7 @@ for (Component C : panel.getComponents())
         btnDeductions.setBackground(new java.awt.Color(255, 255, 255));
         btnDeductions.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnDeductions.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnDeductions.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
+        btnDeductions.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-withdrawal-75.png"))); // NOI18N
         btnDeductions.setText("Deductions");
         btnDeductions.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnDeductions.setOpaque(true);
@@ -216,7 +219,7 @@ for (Component C : panel.getComponents())
         btnAnalysis.setBackground(new java.awt.Color(255, 255, 255));
         btnAnalysis.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnAnalysis.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnAnalysis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
+        btnAnalysis.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-statistics-75.png"))); // NOI18N
         btnAnalysis.setText("<html>Analysis<br> and Reports</html>");
         btnAnalysis.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnAnalysis.setOpaque(true);
@@ -236,7 +239,7 @@ for (Component C : panel.getComponents())
         btnReports.setBackground(new java.awt.Color(255, 255, 255));
         btnReports.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnReports.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnReports.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
+        btnReports.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-data-backup-75.png"))); // NOI18N
         btnReports.setText("<html>Backup and<br>Restore</html>");
         btnReports.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnReports.setOpaque(true);
@@ -256,7 +259,7 @@ for (Component C : panel.getComponents())
         btnSettings.setBackground(new java.awt.Color(255, 255, 255));
         btnSettings.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnSettings.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/User Orange.png"))); // NOI18N
+        btnSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-settings-75.png"))); // NOI18N
         btnSettings.setText("Settings");
         btnSettings.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnSettings.setOpaque(true);
@@ -351,7 +354,9 @@ for (Component C : panel.getComponents())
 
     private void btnAttendanceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAttendanceMouseClicked
         // TODO add your handling code here:
-        
+        Attendance a = new Attendance();
+        a.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnAttendanceMouseClicked
 
     private void btnHolidaysMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHolidaysMouseClicked
@@ -386,6 +391,9 @@ for (Component C : panel.getComponents())
 
     private void btnSettingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSettingsMouseClicked
         // TODO add your handling code here:
+        Settings s = new Settings();
+        s.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnSettingsMouseClicked
 
     private void btnDepartmentMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDepartmentMouseMoved

@@ -31,7 +31,6 @@ Menu m = new Menu(user);
     private void initComponents() {
 
         Header = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
@@ -65,12 +64,7 @@ Menu m = new Menu(user);
         Header.setBackground(new java.awt.Color(18, 19, 34));
         Header.setMinimumSize(new java.awt.Dimension(776, 72));
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("Payroll System");
-        jLabel7.setIconTextGap(5);
-
-        jLabel8.setFont(new java.awt.Font("Castellar", 0, 24)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Castellar", 1, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("SETTINGS");
@@ -80,9 +74,7 @@ Menu m = new Menu(user);
         HeaderLayout.setHorizontalGroup(
             HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(HeaderLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65)
+                .addGap(225, 225, 225)
                 .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addGap(263, 263, 263))
         );
@@ -92,9 +84,6 @@ Menu m = new Menu(user);
                 .addContainerGap()
                 .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(HeaderLayout.createSequentialGroup()
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         getContentPane().add(Header, java.awt.BorderLayout.PAGE_START);
@@ -405,7 +394,6 @@ Menu m = new Menu(user);
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

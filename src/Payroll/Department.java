@@ -169,6 +169,11 @@ public class Department extends javax.swing.JFrame {
         btnDel.setText("Delete");
         btnDel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDel.setOpaque(true);
+        btnDel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDelMouseClicked(evt);
+            }
+        });
         jPanel3.add(btnDel);
 
         btnBack.setBackground(new java.awt.Color(18, 19, 34));
@@ -590,6 +595,10 @@ public class Department extends javax.swing.JFrame {
        txtName.setText("");
        txtDes.setText("");
     }//GEN-LAST:event_btnClrMouseClicked
+
+    private void btnDelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDelMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDelMouseClicked
 
     /**
      * @param args the command line arguments

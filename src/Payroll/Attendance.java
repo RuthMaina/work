@@ -654,7 +654,7 @@ public class Attendance extends javax.swing.JFrame {
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Deleted Successfully");
             
-            table2.FillTable(jTable2, rooms, txtSearch1);
+           // tblLeave.FillTable(tblLeave, rooms, txtSearch1);
             
             
         } catch (SQLException ex) {

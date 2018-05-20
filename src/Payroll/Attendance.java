@@ -6,12 +6,13 @@
 package Payroll;
 
 import static Payroll.Login.user;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -19,6 +20,8 @@ import javax.swing.JSpinner;
  */
 public class Attendance extends javax.swing.JFrame {
     Menu m = new Menu(user);
+    PreparedStatement ps;
+    ResultSet rs;
 
     /**
      * Creates new form Employees
@@ -50,7 +53,7 @@ public class Attendance extends javax.swing.JFrame {
         btnDel = new javax.swing.JLabel();
         btnBack = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblDep = new javax.swing.JTable();
+        tblAttendance = new javax.swing.JTable();
         txtSearch = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -85,7 +88,7 @@ public class Attendance extends javax.swing.JFrame {
         btnDel1 = new javax.swing.JLabel();
         btnBack1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblDep1 = new javax.swing.JTable();
+        tblLeave = new javax.swing.JTable();
         txtSearch1 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
 
@@ -186,8 +189,8 @@ public class Attendance extends javax.swing.JFrame {
         });
         jPanel3.add(btnBack);
 
-        tblDep.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        tblDep.setModel(new javax.swing.table.DefaultTableModel(
+        tblAttendance.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblAttendance.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"1", "IT", null, null},
                 {null, null, null, null},
@@ -206,13 +209,13 @@ public class Attendance extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblDep.setRowHeight(20);
-        jScrollPane1.setViewportView(tblDep);
-        if (tblDep.getColumnModel().getColumnCount() > 0) {
-            tblDep.getColumnModel().getColumn(0).setResizable(false);
-            tblDep.getColumnModel().getColumn(1).setResizable(false);
-            tblDep.getColumnModel().getColumn(2).setResizable(false);
-            tblDep.getColumnModel().getColumn(3).setResizable(false);
+        tblAttendance.setRowHeight(20);
+        jScrollPane1.setViewportView(tblAttendance);
+        if (tblAttendance.getColumnModel().getColumnCount() > 0) {
+            tblAttendance.getColumnModel().getColumn(0).setResizable(false);
+            tblAttendance.getColumnModel().getColumn(1).setResizable(false);
+            tblAttendance.getColumnModel().getColumn(2).setResizable(false);
+            tblAttendance.getColumnModel().getColumn(3).setResizable(false);
         }
 
         txtSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -519,6 +522,11 @@ public class Attendance extends javax.swing.JFrame {
         btnDel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnDel1.setText("Delete");
         btnDel1.setOpaque(true);
+        btnDel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDel1MouseClicked(evt);
+            }
+        });
         jPanel6.add(btnDel1);
 
         btnBack1.setBackground(new java.awt.Color(18, 19, 34));
@@ -534,33 +542,34 @@ public class Attendance extends javax.swing.JFrame {
         });
         jPanel6.add(btnBack1);
 
-        tblDep1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        tblDep1.setModel(new javax.swing.table.DefaultTableModel(
+        tblLeave.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblLeave.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "IT", null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, "1", "IT", null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Employee ID", "Date From", "Date To", "Leave days"
+                "ID", "Employee ID", "Date From", "Date To", "Leave days"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tblDep1.setRowHeight(20);
-        jScrollPane2.setViewportView(tblDep1);
-        if (tblDep1.getColumnModel().getColumnCount() > 0) {
-            tblDep1.getColumnModel().getColumn(0).setResizable(false);
-            tblDep1.getColumnModel().getColumn(1).setResizable(false);
-            tblDep1.getColumnModel().getColumn(2).setResizable(false);
-            tblDep1.getColumnModel().getColumn(3).setResizable(false);
+        tblLeave.setRowHeight(20);
+        jScrollPane2.setViewportView(tblLeave);
+        if (tblLeave.getColumnModel().getColumnCount() > 0) {
+            tblLeave.getColumnModel().getColumn(0).setResizable(false);
+            tblLeave.getColumnModel().getColumn(1).setResizable(false);
+            tblLeave.getColumnModel().getColumn(2).setResizable(false);
+            tblLeave.getColumnModel().getColumn(3).setResizable(false);
+            tblLeave.getColumnModel().getColumn(4).setResizable(false);
         }
 
         txtSearch1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -633,6 +642,25 @@ public class Attendance extends javax.swing.JFrame {
     private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNameActionPerformed
+
+    private void btnDel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDel1MouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) tblLeave.getModel();
+        int selectedRowIndex = tblLeave.getSelectedRow();
+        try {
+            Connection con = DBConnect.connect();
+            ps = con.prepareStatement("DELETE FROM `room` WHERE `ID` = ?");
+            ps.setString(1, model.getValueAt(selectedRowIndex, 0).toString());
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Data Deleted Successfully");
+            
+            table2.FillTable(jTable2, rooms, txtSearch1);
+            
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }//GEN-LAST:event_btnDel1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -714,8 +742,8 @@ public class Attendance extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable tblDep;
-    private javax.swing.JTable tblDep1;
+    private javax.swing.JTable tblAttendance;
+    private javax.swing.JTable tblLeave;
     private javax.swing.JSpinner timeFrom;
     private javax.swing.JSpinner timeTo;
     private javax.swing.JTextField txtDays;

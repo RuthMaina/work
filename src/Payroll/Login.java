@@ -225,6 +225,10 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Could not log in to the system. Make sure the server is on");
             }
         }
+        
+        Menu m = new Menu(user);
+                        m.setVisible(true);
+                        this.dispose();
     }//GEN-LAST:event_jLabel9MouseClicked
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked

@@ -71,7 +71,7 @@ for (Component C : panel.getComponents())
         Body.setMinimumSize(new java.awt.Dimension(845, 375));
 
         Menu.setBackground(new java.awt.Color(255, 255, 255));
-        Menu.setLayout(new java.awt.GridLayout(2, 5, 5, 5));
+        Menu.setLayout(new java.awt.GridLayout(2, 5, 10, 5));
 
         btnEmployees.setBackground(new java.awt.Color(255, 255, 255));
         btnEmployees.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N

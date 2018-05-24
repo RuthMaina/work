@@ -19,8 +19,7 @@ import javax.swing.JOptionPane;
  * @author Ruth
  */
 public class Login extends javax.swing.JFrame {
-    PreparedStatement ps;
-    ResultSet rs;
+   
     static String user;
     static String type;
 
@@ -195,14 +194,14 @@ public class Login extends javax.swing.JFrame {
             Connection con = DBConnect.connect();
             try {
                 // Check the username and passwords
-                ps = con.prepareStatement("SELECT * FROM `user` WHERE `username` = ? AND `password` = ?");
-                ps.setString(1, txtUserName.getText());
-                ps.setString(2, String.valueOf(txtPass.getPassword()));
-                rs = ps.executeQuery();
-                if (rs.next()) {
+                DBConnect.ps = con.prepareStatement("SELECT * FROM `user` WHERE `username` = ? AND `password` = ?");
+                DBConnect.ps.setString(1, txtUserName.getText());
+                DBConnect.ps.setString(2, String.valueOf(txtPass.getPassword()));
+                DBConnect.rs = DBConnect.ps.executeQuery();
+                if (DBConnect.rs.next()) {
                     // Fetch values
-                    user = rs.getString("username");
-                    type = rs.getString("type");
+                    user = DBConnect.rs.getString("username");
+                    type = DBConnect.rs.getString("type");
                     
                     if (type.equals(cboType.getSelectedItem()) && type.equals("Administrator")) {
                         // Open the admin module

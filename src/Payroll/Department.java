@@ -6,6 +6,8 @@
 package Payroll;
 
 import static Payroll.Login.user;
+import java.sql.Connection;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -151,6 +153,14 @@ public class Department extends javax.swing.JFrame {
         btnSave.setText("Save");
         btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSave.setOpaque(true);
+        btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSaveMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnSaveMouseEntered(evt);
+            }
+        });
         jPanel3.add(btnSave);
 
         btnUpdate.setBackground(new java.awt.Color(45, 43, 63));
@@ -242,7 +252,6 @@ public class Department extends javax.swing.JFrame {
         tblDep.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblDep.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "IT"},
                 {null, null},
                 {null, null},
                 {null, null}
@@ -321,7 +330,7 @@ public class Department extends javax.swing.JFrame {
         jLabel23.setText("Overtime Rate");
 
         jLabel27.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel27.setText("Name");
+        jLabel27.setText("Designation");
 
         jLabel28.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel28.setText("Overtime Status");
@@ -387,23 +396,23 @@ public class Department extends javax.swing.JFrame {
                                 .addComponent(btnCash)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnPer)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(91, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, personalInfo3Layout.createSequentialGroup()
                         .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(personalInfo3Layout.createSequentialGroup()
-                                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtDep))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, personalInfo3Layout.createSequentialGroup()
-                                .addComponent(jLabel27)
-                                .addGap(63, 63, 63)
-                                .addComponent(txtName1))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, personalInfo3Layout.createSequentialGroup()
                                 .addComponent(jLabel30)
                                 .addGap(29, 29, 29)
                                 .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtSalary)
-                                    .addComponent(txtRate1))))
+                                    .addComponent(txtRate1)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, personalInfo3Layout.createSequentialGroup()
+                                .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel27))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtName1)
+                                    .addComponent(txtDep))))
                         .addGap(14, 14, 14))))
         );
         personalInfo3Layout.setVerticalGroup(
@@ -489,7 +498,6 @@ public class Department extends javax.swing.JFrame {
         tblDep1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblDep1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "Lecturer", "1", "2000", "60000"},
                 {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null}
@@ -545,7 +553,7 @@ public class Department extends javax.swing.JFrame {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(txtSearch1))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE))
                 .addGap(13, 13, 13))
         );
         jPanel2Layout.setVerticalGroup(
@@ -599,6 +607,36 @@ public class Department extends javax.swing.JFrame {
     private void btnDelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDelMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDelMouseClicked
+
+    private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
+        // TODO add your handling code here:
+               try {
+          Connection con = DBConnect.connect();
+        
+            String sql = "INSERT INTO `setfee`(`class`, `term`, `amount`,Branch) VALUES (?,?,?,?)";
+            // java.sql.Date date1 = new java.sql.Date(FromEv.getDate().getTime());
+            //java.sql.Date date2 = new java.sql.Date(ToEv.getDate().getTime());
+//            con.pst = con.cn.prepareStatement(sql);
+//            con.pst.setString(1, ClassSetF.getSelectedItem().toString());
+//            con.pst.setString(2, TermSetF.getText());
+//             con.pst.setInt(3, Integer.parseInt(AmountSetF.getText()));
+//             con.pst.setString(4, BranchSF.getSelectedItem().toString());
+//            con.pst.execute();
+//            SetFUpdate.setEnabled(true);
+//            SetFCancel.setEnabled(false);
+//            SetFSave.setEnabled(false);
+//            SetFDelete.setEnabled(true);
+            JOptionPane.showMessageDialog(null, "NEW RECORD SAVED");
+             con.close();
+            //FillTable(SetFTable,"SELECT `ID`, `class`, `term`, `amount`,Branch FROM `setfee`");
+        } catch (SQLException e ) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_btnSaveMouseClicked
+
+    private void btnSaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSaveMouseEntered
 
     /**
      * @param args the command line arguments

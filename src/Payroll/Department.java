@@ -6,9 +6,14 @@
 package Payroll;
 
 import static Payroll.Login.user;
+import com.placeholder.PlaceHolder;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -22,6 +27,9 @@ public class Department extends javax.swing.JFrame {
      */
     public Department() {
         initComponents();
+        holder = new PlaceHolder(txtSearch, "Search By Department Name");
+        //holder.setCursiva(true);
+         FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments");
     }
 
     /**
@@ -51,9 +59,9 @@ public class Department extends javax.swing.JFrame {
         jLabel24 = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        txtDes = new javax.swing.JTextArea();
+        txtDesc = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblDep = new javax.swing.JTable();
+        tableDep = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
@@ -169,7 +177,13 @@ public class Department extends javax.swing.JFrame {
         btnUpdate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnUpdate.setText("Update");
         btnUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUpdate.setEnabled(false);
         btnUpdate.setOpaque(true);
+        btnUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnUpdateMouseClicked(evt);
+            }
+        });
         jPanel3.add(btnUpdate);
 
         btnDel.setBackground(new java.awt.Color(45, 43, 63));
@@ -178,10 +192,14 @@ public class Department extends javax.swing.JFrame {
         btnDel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnDel.setText("Delete");
         btnDel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDel.setEnabled(false);
         btnDel.setOpaque(true);
         btnDel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnDelMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnDelMouseEntered(evt);
             }
         });
         jPanel3.add(btnDel);
@@ -210,10 +228,10 @@ public class Department extends javax.swing.JFrame {
 
         txtName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        txtDes.setColumns(20);
-        txtDes.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtDes.setRows(5);
-        jScrollPane2.setViewportView(txtDes);
+        txtDesc.setColumns(20);
+        txtDesc.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtDesc.setRows(5);
+        jScrollPane2.setViewportView(txtDesc);
 
         javax.swing.GroupLayout personalInfo2Layout = new javax.swing.GroupLayout(personalInfo2);
         personalInfo2.setLayout(personalInfo2Layout);
@@ -249,8 +267,8 @@ public class Department extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        tblDep.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        tblDep.setModel(new javax.swing.table.DefaultTableModel(
+        tableDep.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tableDep.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -268,12 +286,17 @@ public class Department extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblDep);
-        if (tblDep.getColumnModel().getColumnCount() > 0) {
-            tblDep.getColumnModel().getColumn(0).setResizable(false);
-            tblDep.getColumnModel().getColumn(0).setPreferredWidth(10);
-            tblDep.getColumnModel().getColumn(1).setResizable(false);
-            tblDep.getColumnModel().getColumn(1).setPreferredWidth(250);
+        tableDep.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableDepMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableDep);
+        if (tableDep.getColumnModel().getColumnCount() > 0) {
+            tableDep.getColumnModel().getColumn(0).setResizable(false);
+            tableDep.getColumnModel().getColumn(0).setPreferredWidth(10);
+            tableDep.getColumnModel().getColumn(1).setResizable(false);
+            tableDep.getColumnModel().getColumn(1).setPreferredWidth(250);
         }
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -282,6 +305,11 @@ public class Department extends javax.swing.JFrame {
 
         txtSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtSearch.setToolTipText("Search by department name");
+        txtSearch.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtSearchCaretUpdate(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -601,34 +629,90 @@ public class Department extends javax.swing.JFrame {
         // TODO add your handling code here:
        txtSearch.setText("");
        txtName.setText("");
-       txtDes.setText("");
+       txtDesc.setText("");
+       DepID = "";
+          btnSave.setEnabled(true);
+             btnUpdate.setEnabled(false);
+            btnDel.setEnabled(false);
     }//GEN-LAST:event_btnClrMouseClicked
 
+    
+        public final void FillTable(JTable table, String Query)
+{
+    try
+    {
+       Connection con = DBConnect.connect();
+       DBConnect.ps = con.prepareStatement(Query);
+      DBConnect.rs =  DBConnect.ps.executeQuery();
+         
+        //To remove previously added rows
+        while(table.getRowCount() > 0) 
+        {
+            ((DefaultTableModel) table.getModel()).removeRow(0);
+        }
+        int columns =  DBConnect.rs.getMetaData().getColumnCount();
+        while( DBConnect.rs.next())
+        {  
+            Object[] row = new Object[columns];
+            for (int i = 1; i <= columns; i++)
+            {  
+                row[i - 1] =  DBConnect.rs.getObject(i);
+            }
+            ((DefaultTableModel) table.getModel()).insertRow( DBConnect.rs.getRow()-1,row);
+        }
+
+        con.close();
+    }
+    catch(SQLException e)
+    {
+        JOptionPane.showMessageDialog(this,e);
+    }
+} 
+    
     private void btnDelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDelMouseClicked
         // TODO add your handling code here:
+         if(!"".equals(DepID)){
+           try {
+              
+            Connection con = DBConnect.connect();
+            String query = "DELETE FROM departments WHERE id = ?";
+            DBConnect.ps = con.prepareStatement(query);
+            DBConnect.ps.setInt  (1, Integer.parseInt(DepID));
+            DBConnect.ps.executeUpdate();
+            con.close();
+            JOptionPane.showMessageDialog(null, "Record Deleted");
+             FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments");
+        } catch (SQLException e ) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        txtSearch.setText("");
+       txtName.setText("");
+       txtDesc.setText("");
+       DepID = "";
+          btnSave.setEnabled(true);
+             btnUpdate.setEnabled(false);
+            btnDel.setEnabled(false);
+        DepID = "";
+         }
+         else
+             JOptionPane.showMessageDialog(null, "ID NEEDED. CLICK RECORD FROM TABLE");
     }//GEN-LAST:event_btnDelMouseClicked
-
+    String DepID = "";
     private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
         // TODO add your handling code here:
                try {
           Connection con = DBConnect.connect();
         
-            String sql = "INSERT INTO `setfee`(`class`, `term`, `amount`,Branch) VALUES (?,?,?,?)";
+            String sql = "INSERT INTO `departments`(`Dep_Name`, `Dep_Description`) VALUES (?,?)";
             // java.sql.Date date1 = new java.sql.Date(FromEv.getDate().getTime());
             //java.sql.Date date2 = new java.sql.Date(ToEv.getDate().getTime());
-//            con.pst = con.cn.prepareStatement(sql);
-//            con.pst.setString(1, ClassSetF.getSelectedItem().toString());
-//            con.pst.setString(2, TermSetF.getText());
-//             con.pst.setInt(3, Integer.parseInt(AmountSetF.getText()));
-//             con.pst.setString(4, BranchSF.getSelectedItem().toString());
-//            con.pst.execute();
-//            SetFUpdate.setEnabled(true);
-//            SetFCancel.setEnabled(false);
-//            SetFSave.setEnabled(false);
-//            SetFDelete.setEnabled(true);
+            DBConnect.ps = con.prepareStatement(sql);
+            DBConnect.ps.setString(1, txtName.getText());
+             DBConnect.ps.setString(2, txtDesc.getText());
+            DBConnect.ps.execute();
             JOptionPane.showMessageDialog(null, "NEW RECORD SAVED");
              con.close();
-            //FillTable(SetFTable,"SELECT `ID`, `class`, `term`, `amount`,Branch FROM `setfee`");
+            FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments");
         } catch (SQLException e ) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -637,6 +721,72 @@ public class Department extends javax.swing.JFrame {
     private void btnSaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseEntered
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSaveMouseEntered
+
+    private void tableDepMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableDepMouseClicked
+        // TODO add your handling code here:
+            int selectedRow = tableDep.getSelectedRow();
+        String hid = tableDep.getValueAt(selectedRow, 0).toString();
+        try {
+           Connection con = DBConnect.connect();
+            String sql = "select * FROM departments WHERE id = ?";
+            DBConnect.ps = con.prepareStatement(sql);
+            DBConnect.ps.setString(1,hid);
+            DBConnect.rs = DBConnect.ps.executeQuery();
+            if(DBConnect.rs.next()) {
+                 txtName.setText(DBConnect.rs.getString(2));
+                txtDesc.setText(DBConnect.rs.getString(3));       
+            }
+            con.close();
+            btnSave.setEnabled(false);
+             btnUpdate.setEnabled(true);
+            btnDel.setEnabled(true);
+
+        } catch (SQLException ex ) {
+            JOptionPane.showMessageDialog(null, ex);
+
+        }
+        DepID = hid;
+    }//GEN-LAST:event_tableDepMouseClicked
+PlaceHolder holder;
+    private void txtSearchCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtSearchCaretUpdate
+        // TODO add your handling code here:
+        if(!"".equals(txtSearch.getText()) && !"Search By Department Name".equals(txtSearch.getText())){
+        FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments "
+            + " WHERE Dep_Name LIKE '%" + txtSearch.getText() + "%' ");
+        }
+         
+    }//GEN-LAST:event_txtSearchCaretUpdate
+
+    private void btnDelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDelMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDelMouseEntered
+
+    private void btnUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateMouseClicked
+        // TODO add your handling code here:
+            if("".equals(DepID))
+        {
+            JOptionPane.showMessageDialog(null, "ID NEEDED. CLICK RECORD FROM TABLE");
+        }
+        else
+        {
+
+            try {
+                 Connection con = DBConnect.connect();
+                String query = "UPDATE `departments` SET `Dep_Name`=?,`Dep_Description`=? where ID = ?";
+               DBConnect.ps = con.prepareStatement(query);
+                  DBConnect.ps.setString(1, txtName.getText());
+            DBConnect.ps.setString(2, txtDesc.getText());
+             DBConnect.ps.setInt(3, Integer.parseInt(DepID));
+                DBConnect.ps.executeUpdate();
+                JOptionPane.showMessageDialog(null,"RECORD UPDATED SUCCESSFULLY");
+                con.close();
+                 FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments");
+            }
+            catch (SQLException ex ) {
+                JOptionPane.showMessageDialog(null, ex);
+
+            }}
+    }//GEN-LAST:event_btnUpdateMouseClicked
 
     /**
      * @param args the command line arguments
@@ -713,10 +863,10 @@ public class Department extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel personalInfo2;
     private javax.swing.JPanel personalInfo3;
-    private javax.swing.JTable tblDep;
+    private javax.swing.JTable tableDep;
     private javax.swing.JTable tblDep1;
     private javax.swing.JTextField txtDep;
-    private javax.swing.JTextArea txtDes;
+    private javax.swing.JTextArea txtDesc;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtName1;
     private javax.swing.JTextField txtRate1;

@@ -7,13 +7,18 @@ package Payroll;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  *
  * @author Ruth
  */
+
 public class DBConnect {
+    static PreparedStatement ps;
+    static ResultSet rs;
      private static Connection con = null;
     
         public static Connection connect(){

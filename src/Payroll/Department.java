@@ -8,9 +8,8 @@ package Payroll;
 import static Payroll.Login.user;
 import com.placeholder.PlaceHolder;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -28,8 +27,11 @@ public class Department extends javax.swing.JFrame {
     public Department() {
         initComponents();
         holder = new PlaceHolder(txtSearch, "Search By Department Name");
+         holder = new PlaceHolder(txtSearchSDep, "Search By Designation");
         //holder.setCursiva(true);
          FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments");
+           FillTable(tblSDep,"SELECT `ID`, `Designation`,OverRate,OverAmount,BasicPay,Department from sub_departments");
+         fillDepartment();
     }
 
     /**
@@ -49,11 +51,11 @@ public class Department extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        btnClr = new javax.swing.JLabel();
-        btnSave = new javax.swing.JLabel();
-        btnUpdate = new javax.swing.JLabel();
-        btnDel = new javax.swing.JLabel();
-        btnBack = new javax.swing.JLabel();
+        btnCIr = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+        btnDel = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
         personalInfo2 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
@@ -69,26 +71,26 @@ public class Department extends javax.swing.JFrame {
         jLabel23 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
-        txtRate1 = new javax.swing.JTextField();
-        txtName1 = new javax.swing.JTextField();
+        OverSDep = new javax.swing.JTextField();
+        DesigSDep = new javax.swing.JTextField();
         btnYes = new javax.swing.JRadioButton();
         btnNo = new javax.swing.JRadioButton();
         btnCash = new javax.swing.JRadioButton();
         btnPer = new javax.swing.JRadioButton();
         jLabel29 = new javax.swing.JLabel();
-        txtDep = new javax.swing.JTextField();
         jLabel30 = new javax.swing.JLabel();
-        txtSalary = new javax.swing.JTextField();
-        jPanel4 = new javax.swing.JPanel();
-        btnClr1 = new javax.swing.JLabel();
-        btnSave1 = new javax.swing.JLabel();
-        btnUpdate1 = new javax.swing.JLabel();
-        btnDel1 = new javax.swing.JLabel();
-        btnBack1 = new javax.swing.JLabel();
+        SalarySDep = new javax.swing.JTextField();
+        ComboDepSDep = new javax.swing.JComboBox<>();
         jScrollPane4 = new javax.swing.JScrollPane();
-        tblDep1 = new javax.swing.JTable();
-        txtSearch1 = new javax.swing.JTextField();
+        tblSDep = new javax.swing.JTable();
+        txtSearchSDep = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        btnCIrSDep = new javax.swing.JButton();
+        btnSaveSDep = new javax.swing.JButton();
+        btnUpdateSDep = new javax.swing.JButton();
+        btnDelSDep = new javax.swing.JButton();
+        btnBackSDep = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -115,7 +117,7 @@ public class Department extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(65, 65, 65)
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
                 .addGap(263, 263, 263))
         );
         HeaderLayout.setVerticalGroup(
@@ -139,81 +141,84 @@ public class Department extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setLayout(new java.awt.GridLayout(2, 3, 10, 5));
 
-        btnClr.setBackground(new java.awt.Color(45, 43, 63));
-        btnClr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnClr.setForeground(new java.awt.Color(255, 255, 255));
-        btnClr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnClr.setText("Clear Fields");
-        btnClr.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnClr.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnClr.setOpaque(true);
-        btnClr.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnClrMouseClicked(evt);
+        btnCIr.setBackground(new java.awt.Color(45, 43, 63));
+        btnCIr.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 16)); // NOI18N
+        btnCIr.setForeground(new java.awt.Color(255, 255, 255));
+        btnCIr.setText("Clear Fields");
+        btnCIr.setBorderPainted(false);
+        btnCIr.setContentAreaFilled(false);
+        btnCIr.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCIr.setOpaque(true);
+        btnCIr.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnCIr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCIrActionPerformed(evt);
             }
         });
-        jPanel3.add(btnClr);
+        jPanel3.add(btnCIr);
 
         btnSave.setBackground(new java.awt.Color(45, 43, 63));
-        btnSave.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnSave.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 16)); // NOI18N
         btnSave.setForeground(new java.awt.Color(255, 255, 255));
-        btnSave.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnSave.setText("Save");
+        btnSave.setBorderPainted(false);
+        btnSave.setContentAreaFilled(false);
         btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSave.setOpaque(true);
-        btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnSaveMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnSaveMouseEntered(evt);
+        btnSave.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
             }
         });
         jPanel3.add(btnSave);
 
         btnUpdate.setBackground(new java.awt.Color(45, 43, 63));
-        btnUpdate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnUpdate.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 16)); // NOI18N
         btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnUpdate.setText("Update");
+        btnUpdate.setBorderPainted(false);
+        btnUpdate.setContentAreaFilled(false);
         btnUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUpdate.setEnabled(false);
         btnUpdate.setOpaque(true);
-        btnUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnUpdateMouseClicked(evt);
+        btnUpdate.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
             }
         });
         jPanel3.add(btnUpdate);
 
         btnDel.setBackground(new java.awt.Color(45, 43, 63));
-        btnDel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnDel.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 16)); // NOI18N
         btnDel.setForeground(new java.awt.Color(255, 255, 255));
-        btnDel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnDel.setText("Delete");
+        btnDel.setBorderPainted(false);
+        btnDel.setContentAreaFilled(false);
         btnDel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDel.setEnabled(false);
         btnDel.setOpaque(true);
-        btnDel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnDelMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnDelMouseEntered(evt);
+        btnDel.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnDel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDelActionPerformed(evt);
             }
         });
         jPanel3.add(btnDel);
 
         btnBack.setBackground(new java.awt.Color(18, 19, 34));
-        btnBack.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnBack.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 16)); // NOI18N
         btnBack.setForeground(new java.awt.Color(255, 255, 255));
-        btnBack.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnBack.setText("Back");
+        btnBack.setBorderPainted(false);
+        btnBack.setContentAreaFilled(false);
         btnBack.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBack.setOpaque(true);
-        btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnBackMouseClicked(evt);
+        btnBack.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
             }
         });
         jPanel3.add(btnBack);
@@ -319,32 +324,35 @@ public class Department extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(personalInfo2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(5, 5, 5))
+                        .addGap(20, 20, 20))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(15, 15, 15)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGap(13, 13, 13))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(txtSearch))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
-                .addGap(13, 13, 13))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(personalInfo2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                 .addGap(8, 8, 8))
         );
 
@@ -363,10 +371,16 @@ public class Department extends javax.swing.JFrame {
         jLabel28.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel28.setText("Overtime Status");
 
-        txtRate1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtRate1.setToolTipText("Enter the overtime rate or amount number");
+        OverSDep.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        OverSDep.setText("0");
+        OverSDep.setToolTipText("Enter the overtime rate or amount number");
+        OverSDep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OverSDepActionPerformed(evt);
+            }
+        });
 
-        txtName1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        DesigSDep.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         btnYes.setBackground(new java.awt.Color(255, 255, 255));
         btnStatus.add(btnYes);
@@ -394,14 +408,35 @@ public class Department extends javax.swing.JFrame {
         btnPer.setText("Percentage");
 
         jLabel29.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel29.setText("Department ID");
-
-        txtDep.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel29.setText("Department");
 
         jLabel30.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel30.setText("Basic Salary");
 
-        txtSalary.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        SalarySDep.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        SalarySDep.setText("0");
+
+        ComboDepSDep.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ComboDepSDep.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                ComboDepSDepItemStateChanged(evt);
+            }
+        });
+        ComboDepSDep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboDepSDepActionPerformed(evt);
+            }
+        });
+        ComboDepSDep.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                ComboDepSDepPropertyChange(evt);
+            }
+        });
+        ComboDepSDep.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
+            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
+                ComboDepSDepVetoableChange(evt);
+            }
+        });
 
         javax.swing.GroupLayout personalInfo3Layout = new javax.swing.GroupLayout(personalInfo3);
         personalInfo3.setLayout(personalInfo3Layout);
@@ -424,36 +459,36 @@ public class Department extends javax.swing.JFrame {
                                 .addComponent(btnCash)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnPer)))
-                        .addContainerGap(91, Short.MAX_VALUE))
+                        .addContainerGap(96, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, personalInfo3Layout.createSequentialGroup()
                         .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, personalInfo3Layout.createSequentialGroup()
                                 .addComponent(jLabel30)
                                 .addGap(29, 29, 29)
                                 .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtSalary)
-                                    .addComponent(txtRate1)))
+                                    .addComponent(SalarySDep)
+                                    .addComponent(OverSDep)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, personalInfo3Layout.createSequentialGroup()
                                 .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel27))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtName1)
-                                    .addComponent(txtDep))))
+                                    .addComponent(DesigSDep)
+                                    .addComponent(ComboDepSDep, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(14, 14, 14))))
         );
         personalInfo3Layout.setVerticalGroup(
             personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(personalInfo3Layout.createSequentialGroup()
                 .addGap(7, 7, 7)
-                .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ComboDepSDep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtName1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(DesigSDep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -466,102 +501,150 @@ public class Department extends javax.swing.JFrame {
                         .addComponent(btnPer))
                     .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtRate1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(OverSDep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(personalInfo3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSalary, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(21, Short.MAX_VALUE))
+                    .addComponent(SalarySDep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel4.setLayout(new java.awt.GridLayout(2, 3, 10, 5));
-
-        btnClr1.setBackground(new java.awt.Color(45, 43, 63));
-        btnClr1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnClr1.setForeground(new java.awt.Color(255, 255, 255));
-        btnClr1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnClr1.setText("Clear Fields");
-        btnClr1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnClr1.setOpaque(true);
-        jPanel4.add(btnClr1);
-
-        btnSave1.setBackground(new java.awt.Color(45, 43, 63));
-        btnSave1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnSave1.setForeground(new java.awt.Color(255, 255, 255));
-        btnSave1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnSave1.setText("Save");
-        btnSave1.setOpaque(true);
-        jPanel4.add(btnSave1);
-
-        btnUpdate1.setBackground(new java.awt.Color(45, 43, 63));
-        btnUpdate1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnUpdate1.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdate1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnUpdate1.setText("Update");
-        btnUpdate1.setOpaque(true);
-        jPanel4.add(btnUpdate1);
-
-        btnDel1.setBackground(new java.awt.Color(45, 43, 63));
-        btnDel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnDel1.setForeground(new java.awt.Color(255, 255, 255));
-        btnDel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnDel1.setText("Delete");
-        btnDel1.setOpaque(true);
-        jPanel4.add(btnDel1);
-
-        btnBack1.setBackground(new java.awt.Color(18, 19, 34));
-        btnBack1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnBack1.setForeground(new java.awt.Color(255, 255, 255));
-        btnBack1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnBack1.setText("Back");
-        btnBack1.setOpaque(true);
-        btnBack1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnBack1MouseClicked(evt);
-            }
-        });
-        jPanel4.add(btnBack1);
-
-        tblDep1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        tblDep1.setModel(new javax.swing.table.DefaultTableModel(
+        tblSDep.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        tblSDep.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Name", "Dep ID", "Overtime", "Basic Salary"
+                "ID", "Designation", "O.Rate", "O.Amount", "Basic S.", "Department"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane4.setViewportView(tblDep1);
-        if (tblDep1.getColumnModel().getColumnCount() > 0) {
-            tblDep1.getColumnModel().getColumn(0).setResizable(false);
-            tblDep1.getColumnModel().getColumn(0).setPreferredWidth(40);
-            tblDep1.getColumnModel().getColumn(1).setResizable(false);
-            tblDep1.getColumnModel().getColumn(1).setPreferredWidth(150);
-            tblDep1.getColumnModel().getColumn(2).setResizable(false);
-            tblDep1.getColumnModel().getColumn(2).setPreferredWidth(40);
-            tblDep1.getColumnModel().getColumn(3).setResizable(false);
-            tblDep1.getColumnModel().getColumn(3).setPreferredWidth(50);
-            tblDep1.getColumnModel().getColumn(4).setResizable(false);
-            tblDep1.getColumnModel().getColumn(4).setPreferredWidth(70);
+        tblSDep.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSDepMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(tblSDep);
+        if (tblSDep.getColumnModel().getColumnCount() > 0) {
+            tblSDep.getColumnModel().getColumn(0).setResizable(false);
+            tblSDep.getColumnModel().getColumn(0).setPreferredWidth(40);
+            tblSDep.getColumnModel().getColumn(1).setResizable(false);
+            tblSDep.getColumnModel().getColumn(1).setPreferredWidth(100);
+            tblSDep.getColumnModel().getColumn(2).setResizable(false);
+            tblSDep.getColumnModel().getColumn(2).setPreferredWidth(40);
+            tblSDep.getColumnModel().getColumn(3).setResizable(false);
+            tblSDep.getColumnModel().getColumn(3).setPreferredWidth(40);
+            tblSDep.getColumnModel().getColumn(4).setResizable(false);
+            tblSDep.getColumnModel().getColumn(4).setPreferredWidth(50);
+            tblSDep.getColumnModel().getColumn(5).setResizable(false);
+            tblSDep.getColumnModel().getColumn(5).setPreferredWidth(70);
         }
 
-        txtSearch1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtSearch1.setToolTipText("Search by name");
+        txtSearchSDep.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtSearchSDep.setToolTipText("Search by name");
+        txtSearchSDep.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtSearchSDepCaretUpdate(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Search_20px.png"))); // NOI18N
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setLayout(new java.awt.GridLayout(2, 3, 10, 5));
+
+        btnCIrSDep.setBackground(new java.awt.Color(45, 43, 63));
+        btnCIrSDep.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 16)); // NOI18N
+        btnCIrSDep.setForeground(new java.awt.Color(255, 255, 255));
+        btnCIrSDep.setText("Clear Fields");
+        btnCIrSDep.setBorderPainted(false);
+        btnCIrSDep.setContentAreaFilled(false);
+        btnCIrSDep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCIrSDep.setOpaque(true);
+        btnCIrSDep.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnCIrSDep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCIrSDepActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnCIrSDep);
+
+        btnSaveSDep.setBackground(new java.awt.Color(45, 43, 63));
+        btnSaveSDep.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 16)); // NOI18N
+        btnSaveSDep.setForeground(new java.awt.Color(255, 255, 255));
+        btnSaveSDep.setText("Save");
+        btnSaveSDep.setBorderPainted(false);
+        btnSaveSDep.setContentAreaFilled(false);
+        btnSaveSDep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSaveSDep.setOpaque(true);
+        btnSaveSDep.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnSaveSDep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveSDepActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnSaveSDep);
+
+        btnUpdateSDep.setBackground(new java.awt.Color(45, 43, 63));
+        btnUpdateSDep.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 16)); // NOI18N
+        btnUpdateSDep.setForeground(new java.awt.Color(255, 255, 255));
+        btnUpdateSDep.setText("Update");
+        btnUpdateSDep.setBorderPainted(false);
+        btnUpdateSDep.setContentAreaFilled(false);
+        btnUpdateSDep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUpdateSDep.setEnabled(false);
+        btnUpdateSDep.setOpaque(true);
+        btnUpdateSDep.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnUpdateSDep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateSDepActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnUpdateSDep);
+
+        btnDelSDep.setBackground(new java.awt.Color(45, 43, 63));
+        btnDelSDep.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 16)); // NOI18N
+        btnDelSDep.setForeground(new java.awt.Color(255, 255, 255));
+        btnDelSDep.setText("Delete");
+        btnDelSDep.setBorderPainted(false);
+        btnDelSDep.setContentAreaFilled(false);
+        btnDelSDep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDelSDep.setEnabled(false);
+        btnDelSDep.setOpaque(true);
+        btnDelSDep.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnDelSDep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDelSDepActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnDelSDep);
+
+        btnBackSDep.setBackground(new java.awt.Color(18, 19, 34));
+        btnBackSDep.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 16)); // NOI18N
+        btnBackSDep.setForeground(new java.awt.Color(255, 255, 255));
+        btnBackSDep.setText("Back");
+        btnBackSDep.setBorderPainted(false);
+        btnBackSDep.setContentAreaFilled(false);
+        btnBackSDep.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBackSDep.setOpaque(true);
+        btnBackSDep.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnBackSDep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackSDepActionPerformed(evt);
+            }
+        });
+        jPanel4.add(btnBackSDep);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -571,17 +654,17 @@ public class Department extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(personalInfo3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(5, 5, 5))
+                        .addGap(20, 20, 20))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(15, 15, 15)
+                        .addContainerGap()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(txtSearch1))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE))
+                        .addComponent(txtSearchSDep))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE))
                 .addGap(13, 13, 13))
         );
         jPanel2Layout.setVerticalGroup(
@@ -590,14 +673,14 @@ public class Department extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSearchSDep, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                 .addGap(8, 8, 8))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(personalInfo3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -609,32 +692,9 @@ public class Department extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseClicked
-        // TODO add your handling code here:
-        m.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnBackMouseClicked
-
-    private void btnBack1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBack1MouseClicked
-        // TODO add your handling code here:
-        m.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnBack1MouseClicked
-
     private void btnYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnYesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnYesActionPerformed
-
-    private void btnClrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClrMouseClicked
-        // TODO add your handling code here:
-       txtSearch.setText("");
-       txtName.setText("");
-       txtDesc.setText("");
-       DepID = "";
-          btnSave.setEnabled(true);
-             btnUpdate.setEnabled(false);
-            btnDel.setEnabled(false);
-    }//GEN-LAST:event_btnClrMouseClicked
 
     
         public final void FillTable(JTable table, String Query)
@@ -668,60 +728,8 @@ public class Department extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this,e);
     }
 } 
-    
-    private void btnDelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDelMouseClicked
-        // TODO add your handling code here:
-         if(!"".equals(DepID)){
-           try {
-              
-            Connection con = DBConnect.connect();
-            String query = "DELETE FROM departments WHERE id = ?";
-            DBConnect.ps = con.prepareStatement(query);
-            DBConnect.ps.setInt  (1, Integer.parseInt(DepID));
-            DBConnect.ps.executeUpdate();
-            con.close();
-            JOptionPane.showMessageDialog(null, "Record Deleted");
-             FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments");
-        } catch (SQLException e ) {
-            JOptionPane.showMessageDialog(null, e);
-        }
-        txtSearch.setText("");
-       txtName.setText("");
-       txtDesc.setText("");
-       DepID = "";
-          btnSave.setEnabled(true);
-             btnUpdate.setEnabled(false);
-            btnDel.setEnabled(false);
-        DepID = "";
-         }
-         else
-             JOptionPane.showMessageDialog(null, "ID NEEDED. CLICK RECORD FROM TABLE");
-    }//GEN-LAST:event_btnDelMouseClicked
-    String DepID = "";
-    private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
-        // TODO add your handling code here:
-               try {
-          Connection con = DBConnect.connect();
-        
-            String sql = "INSERT INTO `departments`(`Dep_Name`, `Dep_Description`) VALUES (?,?)";
-            // java.sql.Date date1 = new java.sql.Date(FromEv.getDate().getTime());
-            //java.sql.Date date2 = new java.sql.Date(ToEv.getDate().getTime());
-            DBConnect.ps = con.prepareStatement(sql);
-            DBConnect.ps.setString(1, txtName.getText());
-             DBConnect.ps.setString(2, txtDesc.getText());
-            DBConnect.ps.execute();
-            JOptionPane.showMessageDialog(null, "NEW RECORD SAVED");
-             con.close();
-            FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments");
-        } catch (SQLException e ) {
-            JOptionPane.showMessageDialog(null, e);
-        }
-    }//GEN-LAST:event_btnSaveMouseClicked
-
-    private void btnSaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSaveMouseEntered
-
+        String DepID = "";
+        String SDepID = "";
     private void tableDepMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableDepMouseClicked
         // TODO add your handling code here:
             int selectedRow = tableDep.getSelectedRow();
@@ -737,10 +745,9 @@ public class Department extends javax.swing.JFrame {
                 txtDesc.setText(DBConnect.rs.getString(3));       
             }
             con.close();
-            btnSave.setEnabled(false);
              btnUpdate.setEnabled(true);
             btnDel.setEnabled(true);
-
+ btnSave.setEnabled(false);
         } catch (SQLException ex ) {
             JOptionPane.showMessageDialog(null, ex);
 
@@ -750,20 +757,107 @@ public class Department extends javax.swing.JFrame {
 PlaceHolder holder;
     private void txtSearchCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtSearchCaretUpdate
         // TODO add your handling code here:
-        if(!"".equals(txtSearch.getText()) && !"Search By Department Name".equals(txtSearch.getText())){
+        if(!"Search By Department Name".equals(txtSearch.getText())){
         FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments "
             + " WHERE Dep_Name LIKE '%" + txtSearch.getText() + "%' ");
         }
          
     }//GEN-LAST:event_txtSearchCaretUpdate
 
-    private void btnDelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDelMouseEntered
+    private void ComboDepSDepPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_ComboDepSDepPropertyChange
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnDelMouseEntered
+        
+    }//GEN-LAST:event_ComboDepSDepPropertyChange
 
-    private void btnUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdateMouseClicked
+    private void ComboDepSDepVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_ComboDepSDepVetoableChange
         // TODO add your handling code here:
-            if("".equals(DepID))
+        
+    }//GEN-LAST:event_ComboDepSDepVetoableChange
+
+    private void ComboDepSDepItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ComboDepSDepItemStateChanged
+        // TODO add your handling code here:
+      
+    }//GEN-LAST:event_ComboDepSDepItemStateChanged
+String depIDinSub = "";
+    private void ComboDepSDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboDepSDepActionPerformed
+        // TODO add your handling code here:
+          //change the id value
+          if(ComboDepSDep.getItemCount() > 1){
+          depIDinSub = depIDlist.get(ComboDepSDep.getSelectedIndex());
+          }
+    }//GEN-LAST:event_ComboDepSDepActionPerformed
+
+    private void btnCIrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCIrActionPerformed
+        // TODO add your handling code here:
+      
+        txtSearch.setText("");
+       txtName.setText("");
+       txtDesc.setText("");
+       DepID = "";
+             btnUpdate.setEnabled(false);
+            btnDel.setEnabled(false);
+        
+    }//GEN-LAST:event_btnCIrActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        if(!txtName.getText().equals(""))
+        {
+         try {
+          Connection con = DBConnect.connect();
+        
+            String sql = "INSERT INTO `departments`(`Dep_Name`, `Dep_Description`) VALUES (?,?)";
+            // java.sql.Date date1 = new java.sql.Date(FromEv.getDate().getTime());
+            //java.sql.Date date2 = new java.sql.Date(ToEv.getDate().getTime());
+            DBConnect.ps = con.prepareStatement(sql);
+            DBConnect.ps.setString(1, txtName.getText());
+             DBConnect.ps.setString(2, txtDesc.getText());
+            DBConnect.ps.execute();
+            JOptionPane.showMessageDialog(null, "NEW RECORD SAVED");
+             con.close();
+            FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments");
+            fillDepartment();
+        } catch (SQLException e ) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Name is empty!");
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActionPerformed
+        // TODO add your handling code here:
+         if(!"".equals(DepID)){
+           try {
+              
+            Connection con = DBConnect.connect();
+            String query = "DELETE FROM departments WHERE id = ?";
+            DBConnect.ps = con.prepareStatement(query);
+            DBConnect.ps.setInt  (1, Integer.parseInt(DepID));
+            DBConnect.ps.executeUpdate();
+            con.close();
+            JOptionPane.showMessageDialog(null, "Record Deleted");
+             FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments");
+             fillDepartment();
+        } catch (SQLException e ) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        txtSearch.setText("");
+       txtName.setText("");
+       txtDesc.setText("");
+       DepID = "";
+          btnSave.setEnabled(true);
+             btnUpdate.setEnabled(false);
+            btnDel.setEnabled(false);
+        DepID = "";
+         }
+         else
+             JOptionPane.showMessageDialog(null, "ID NEEDED. CLICK RECORD FROM TABLE");
+    }//GEN-LAST:event_btnDelActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+              if("".equals(DepID))
         {
             JOptionPane.showMessageDialog(null, "ID NEEDED. CLICK RECORD FROM TABLE");
         }
@@ -781,13 +875,262 @@ PlaceHolder holder;
                 JOptionPane.showMessageDialog(null,"RECORD UPDATED SUCCESSFULLY");
                 con.close();
                  FillTable(tableDep,"SELECT `ID`, `Dep_Name` from departments");
+                 fillDepartment();
+                 
             }
             catch (SQLException ex ) {
                 JOptionPane.showMessageDialog(null, ex);
 
             }}
-    }//GEN-LAST:event_btnUpdateMouseClicked
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+         m.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnCIrSDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCIrSDepActionPerformed
+        // TODO add your handling code here:
+           txtSearchSDep.setText("");
+       DesigSDep.setText("");
+       OverSDep.setText("0");
+       SalarySDep.setText("0");
+       SDepID = "";
+       btnRate.clearSelection();
+       btnStatus.clearSelection();
+             btnUpdateSDep.setEnabled(false);
+            btnDelSDep.setEnabled(false);
+            btnSave.setEnabled(true);
+    }//GEN-LAST:event_btnCIrSDepActionPerformed
+public static boolean isNumeric(String str)
+{
+  return str.matches("\\d") && str.matches("^[+-]?\\d*\\.?\\d*([eE]\\d)?\\d*$");  //match a number with optional '-' and decimal and also allows exponentiol and +/- signs.
+}
+    private void btnSaveSDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveSDepActionPerformed
+        // TODO add your handling code here:
+          if(!DesigSDep.getText().equals("") && !SalarySDep.getText().equals(""))
+        {
+               if(SalarySDep.getText().chars().allMatch( Character::isDigit ))
+               {
+         try {
+          Connection con = DBConnect.connect();
+        
+            String sql = "Insert into `sub_departments`(`Department`, `Designation`, `OverStatus`, `OverRate`, `OverAmount`, `BasicPay`)"
+                    + " VALUES (?,?,?,?,?,?)";
+            // java.sql.Date date1 = new java.sql.Date(FromEv.getDate().getTime());
+            //java.sql.Date date2 = new java.sql.Date(ToEv.getDate().getTime());
+            DBConnect.ps = con.prepareStatement(sql);
+            DBConnect.ps.setString(1, ComboDepSDep.getSelectedItem().toString());
+             DBConnect.ps.setString(2, DesigSDep.getText());
+             if(btnYes.isSelected()){
+            DBConnect.ps.setInt(3, 1);
+             }
+             else
+             {
+                   DBConnect.ps.setInt(3, 0);
+             }
+             
+             if(btnCash.isSelected())
+             {
+            DBConnect.ps.setString(4, "CASH");
+             }
+             else if(btnPer.isSelected())
+             {
+                 DBConnect.ps.setString(4, "PERCENTAGE");
+             } 
+             else
+             {
+                    DBConnect.ps.setString(4, "NULL");
+             }
+          DBConnect.ps.setString(5, OverSDep.getText());
+           DBConnect.ps.setString(6, SalarySDep.getText());
+            DBConnect.ps.execute();
+            JOptionPane.showMessageDialog(null, "NEW RECORD SAVED");
+             con.close();
+            FillTable(tblSDep,"SELECT `ID`, `Designation`,OverRate,OverAmount,BasicPay,Department from sub_departments");
+        } catch (SQLException e ) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        }
+               else{
+                   JOptionPane.showMessageDialog(null, "Invalid input for salary");
+               }
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Some fields are empty");
+    }//GEN-LAST:event_btnSaveSDepActionPerformed
+
+    private void btnUpdateSDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateSDepActionPerformed
+        // TODO add your handling code here:
+          if("".equals(SDepID))
+        {
+            JOptionPane.showMessageDialog(null, "ID NEEDED. CLICK RECORD FROM TABLE");
+        }
+        else
+        {
+
+            try {
+                 Connection con = DBConnect.connect();
+                String query = "UPDATE `sub_departments` SET `Department` = ?, `Designation` = ?, `OverStatus` = ?, `OverRate` = ?"
+                        + ", `OverAmount` = ?, `BasicPay` = ?"
+                        + " where ID = ?";
+               DBConnect.ps = con.prepareStatement(query);
+                  DBConnect.ps.setString(1, ComboDepSDep.getSelectedItem().toString());
+             DBConnect.ps.setString(2, DesigSDep.getText());
+             if(btnYes.isSelected()){
+            DBConnect.ps.setInt(3, 1);
+             }
+             else
+             {
+                   DBConnect.ps.setInt(3, 0);
+             }
+             
+             if(btnCash.isSelected())
+             {
+            DBConnect.ps.setString(4, "CASH");
+             }
+             else if(btnPer.isSelected())
+             {
+                 DBConnect.ps.setString(4, "PERCENTAGE");
+             } 
+             else
+             {
+                    DBConnect.ps.setString(4, "NULL");
+             }
+          DBConnect.ps.setString(5, OverSDep.getText());
+           DBConnect.ps.setString(6, SalarySDep.getText());
+           
+             DBConnect.ps.setInt(7, Integer.parseInt(SDepID));
+                DBConnect.ps.executeUpdate();
+                JOptionPane.showMessageDialog(null,"RECORD UPDATED SUCCESSFULLY");
+                con.close();
+                 FillTable(tblSDep,"SELECT `ID`, `Designation`,OverRate,OverAmount,BasicPay,Department from sub_departments");
+                 
+            }
+            catch (SQLException ex ) {
+                JOptionPane.showMessageDialog(null, ex);
+
+            }}
+    }//GEN-LAST:event_btnUpdateSDepActionPerformed
+
+    private void btnDelSDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelSDepActionPerformed
+        // TODO add your handling code here:
+          if(!"".equals(SDepID)){
+           try {
+              
+            Connection con = DBConnect.connect();
+            String query = "DELETE FROM sub_departments WHERE id = ?";
+            DBConnect.ps = con.prepareStatement(query);
+            DBConnect.ps.setInt  (1, Integer.parseInt(SDepID));
+            DBConnect.ps.executeUpdate();
+            con.close();
+            JOptionPane.showMessageDialog(null, "Record Deleted");
+               FillTable(tblSDep,"SELECT `ID`, `Designation`,OverRate,OverAmount,BasicPay,Department from sub_departments");
+             fillDepartment();
+        } catch (SQLException e ) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        DesigSDep.setText("");
+       SalarySDep.setText("0");
+       OverSDep.setText("0");
+       btnRate.clearSelection();
+       btnStatus.clearSelection();
+       SDepID = "";
+          btnSaveSDep.setEnabled(true);
+             btnUpdateSDep.setEnabled(false);
+            btnDelSDep.setEnabled(false);
+        DepID = "";
+         }
+         else
+             JOptionPane.showMessageDialog(null, "ID NEEDED. CLICK RECORD FROM TABLE");
+    }//GEN-LAST:event_btnDelSDepActionPerformed
+
+    private void btnBackSDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackSDepActionPerformed
+        // TODO add your handling code here: m.setVisible(true);
+          m.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBackSDepActionPerformed
+
+    private void OverSDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OverSDepActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_OverSDepActionPerformed
+
+    private void tblSDepMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSDepMouseClicked
+        // TODO add your handling code here:
+           int selectedRow = tblSDep.getSelectedRow();
+        String hid = tblSDep.getValueAt(selectedRow, 0).toString();
+        try {
+           Connection con = DBConnect.connect();
+            String sql = "select * FROM sub_departments WHERE id = ?";
+            DBConnect.ps = con.prepareStatement(sql);
+            DBConnect.ps.setString(1,hid);
+            DBConnect.rs = DBConnect.ps.executeQuery();
+            if(DBConnect.rs.next()) {
+                ComboDepSDep.setSelectedItem(DBConnect.rs.getString(2));
+                DesigSDep.setText(DBConnect.rs.getString(3));
+               if(DBConnect.rs.getInt(4) == 1)
+               {
+                   btnYes.setSelected(true);
+               }
+               else
+               {
+                   btnNo.setSelected(true);
+               }
+               switch (DBConnect.rs.getString(5)) {
+                   case "CASH":
+                       btnCash.setSelected(true);
+                       break;
+                   case "PERCENTAGE":
+                       btnPer.setSelected(true);
+                       break;
+                   default:
+                      btnRate.clearSelection();
+                       break;
+               }
+                    OverSDep.setText(DBConnect.rs.getString(6)); 
+                    SalarySDep.setText(DBConnect.rs.getString(7));
+                    
+            }
+            con.close();
+             btnUpdateSDep.setEnabled(true);
+            btnDelSDep.setEnabled(true);
+            btnSaveSDep.setEnabled(false);
+
+        } catch (SQLException ex ) {
+            JOptionPane.showMessageDialog(null, ex);
+
+        }
+        SDepID = hid;
+    }//GEN-LAST:event_tblSDepMouseClicked
+
+    private void txtSearchSDepCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtSearchSDepCaretUpdate
+        // TODO add your handling code here:
+         if(!"Search By Designation".equals(txtSearchSDep.getText())){
+        FillTable(tblSDep,"SELECT ID,Designation,OverRate,OverAmount,BasicPay,Department from sub_departments"
+            + " WHERE Designation LIKE '%" + txtSearchSDep.getText() + "%' ");
+        }
+    }//GEN-LAST:event_txtSearchSDepCaretUpdate
+ ArrayList<String> depIDlist = new ArrayList<>();
+    public final void fillDepartment(){
+        
+        try {
+           Connection con = DBConnect.connect();
+            String sql = "select * FROM departments";
+            DBConnect.ps = con.prepareStatement(sql);
+            DBConnect.rs = DBConnect.ps.executeQuery();
+             ComboDepSDep.removeAllItems();
+             depIDlist.removeAll(depIDlist);
+            while(DBConnect.rs.next()) {
+                ComboDepSDep.addItem(DBConnect.rs.getString(2));
+                depIDlist.add(Integer.toString(DBConnect.rs.getInt(1)));
+            }
+            con.close();
+        } catch (SQLException ex ) {
+            JOptionPane.showMessageDialog(null, ex);
+
+        }
+}
     /**
      * @param args the command line arguments
      */
@@ -825,22 +1168,26 @@ PlaceHolder holder;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> ComboDepSDep;
+    private javax.swing.JTextField DesigSDep;
     private javax.swing.JPanel Header;
-    private javax.swing.JLabel btnBack;
-    private javax.swing.JLabel btnBack1;
+    private javax.swing.JTextField OverSDep;
+    private javax.swing.JTextField SalarySDep;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnBackSDep;
+    private javax.swing.JButton btnCIr;
+    private javax.swing.JButton btnCIrSDep;
     private javax.swing.JRadioButton btnCash;
-    private javax.swing.JLabel btnClr;
-    private javax.swing.JLabel btnClr1;
-    private javax.swing.JLabel btnDel;
-    private javax.swing.JLabel btnDel1;
+    private javax.swing.JButton btnDel;
+    private javax.swing.JButton btnDelSDep;
     private javax.swing.JRadioButton btnNo;
     private javax.swing.JRadioButton btnPer;
     private javax.swing.ButtonGroup btnRate;
-    private javax.swing.JLabel btnSave;
-    private javax.swing.JLabel btnSave1;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSaveSDep;
     private javax.swing.ButtonGroup btnStatus;
-    private javax.swing.JLabel btnUpdate;
-    private javax.swing.JLabel btnUpdate1;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnUpdateSDep;
     private javax.swing.JRadioButton btnYes;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
@@ -864,14 +1211,10 @@ PlaceHolder holder;
     private javax.swing.JPanel personalInfo2;
     private javax.swing.JPanel personalInfo3;
     private javax.swing.JTable tableDep;
-    private javax.swing.JTable tblDep1;
-    private javax.swing.JTextField txtDep;
+    private javax.swing.JTable tblSDep;
     private javax.swing.JTextArea txtDesc;
     private javax.swing.JTextField txtName;
-    private javax.swing.JTextField txtName1;
-    private javax.swing.JTextField txtRate1;
-    private javax.swing.JTextField txtSalary;
     private javax.swing.JTextField txtSearch;
-    private javax.swing.JTextField txtSearch1;
+    private javax.swing.JTextField txtSearchSDep;
     // End of variables declaration//GEN-END:variables
 }

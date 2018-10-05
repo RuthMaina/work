@@ -20,37 +20,36 @@ import javax.swing.table.DefaultTableModel;
  * @author Ruth
  */
 public class TableFilter {
-     PreparedStatement ps = null;
-        Statement stmt;
-        ResultSet rs = null;
         
-public void Filter(JTable table, String Query,JTextField Filter) {
-    try {
-        Connection con = DBConnect.connect();
-        ps = con.prepareStatement(Query);
-        ps.setString(1, "%" + Filter.getText() + "%");
-        rs = ps.executeQuery();
-        
-        //To remove previously added rows
-        while(table.getRowCount() > 0) 
-        {
-            ((DefaultTableModel) table.getModel()).removeRow(0);
-        }
-        int columns = rs.getMetaData().getColumnCount();
-        while(rs.next())
-        {  
-            Object[] row = new Object[columns];
-            for (int i = 1; i <= columns; i++)
-            {  
-                row[i - 1] = rs.getObject(i);
+public void Filter(JTable table, String Query, JTextField Filter) {
+    Connection con = DBConnect.connect();
+        try {
+            DBConnect.ps = con.prepareStatement(Query);
+            DBConnect.ps.setString(1, "%" + Filter.getText() + "%");
+            DBConnect.rs = DBConnect.ps.executeQuery();
+
+            // To remove previously added rows
+            while (table.getRowCount() > 0) {
+                ((DefaultTableModel) table.getModel()).removeRow(0);
             }
-            ((DefaultTableModel) table.getModel()).insertRow(rs.getRow()-1,row);
+
+            int columns = DBConnect.rs.getMetaData().getColumnCount();
+
+            while (DBConnect.rs.next()) {
+                Object[] row = new Object[columns];
+
+                for (int i = 1; i <= columns; i++) {
+                    row[i - 1] = DBConnect.rs.getObject(i);
+                }
+
+                ((DefaultTableModel) table.getModel()).insertRow(DBConnect.rs.getRow() - 1, row);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {}
         }
-        con.close();
-    }
-    catch(SQLException e)
-    {
-        JOptionPane.showMessageDialog(null,e);
-    }
 }
 }

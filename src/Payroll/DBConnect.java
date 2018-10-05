@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -19,6 +20,7 @@ import java.sql.SQLException;
 public class DBConnect {
     static PreparedStatement ps;
     static ResultSet rs;
+    static Statement st;
      private static Connection con = null;
     
         public static Connection connect(){

@@ -361,7 +361,9 @@ for (Component C : panel.getComponents())
 
     private void btnHolidaysMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHolidaysMouseClicked
         // TODO add your handling code here:
-        
+        Holiday h = new Holiday();
+        h.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnHolidaysMouseClicked
 
     private void btnEmployeesMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmployeesMouseMoved
@@ -371,6 +373,9 @@ for (Component C : panel.getComponents())
 
     private void btnOvertimeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOvertimeMouseClicked
         // TODO add your handling code here:
+        Overtime o = new Overtime();
+        o.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnOvertimeMouseClicked
 
     private void btnAllowancesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAllowancesMouseClicked

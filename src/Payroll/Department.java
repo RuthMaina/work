@@ -794,6 +794,7 @@ String depIDinSub = "";
        txtName.setText("");
        txtDesc.setText("");
        DepID = "";
+       btnSave.setEnabled(true);
              btnUpdate.setEnabled(false);
             btnDel.setEnabled(false);
         

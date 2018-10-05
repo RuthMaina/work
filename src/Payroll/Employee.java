@@ -7,15 +7,26 @@ package Payroll;
 
 import static Payroll.Login.user;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -30,15 +41,75 @@ public class Employee extends javax.swing.JFrame {
      */
     public Employee() {
         initComponents();
+        //init departments
+        fillDepartment();
+        fillDesignation();
     }
-    
+      public final void fillDepartment(){
+        
+        try {
+           Connection con = DBConnect.connect();
+            String sql = "select * FROM departments";
+            DBConnect.ps = con.prepareStatement(sql);
+            DBConnect.rs = DBConnect.ps.executeQuery();
+            cboDep.removeAllItems();
+            // depIDlist.removeAll(depIDlist);
+            while(DBConnect.rs.next()) {
+                cboDep.addItem(DBConnect.rs.getString(2));
+               // depIDlist.add(Integer.toString(DBConnect.rs.getInt(1)));
+            }
+            con.close();
+        } catch (SQLException ex ) {
+            JOptionPane.showMessageDialog(null, ex);
+
+        }
+}
+            public final void fillDesignation(){
+         if(cboDep.getItemCount() > 1){
+        try {
+           Connection con = DBConnect.connect();
+            String sql = "select * FROM sub_departments where department = '"+cboDep.getSelectedItem().toString()+"'";
+            DBConnect.ps = con.prepareStatement(sql);
+            DBConnect.rs = DBConnect.ps.executeQuery();
+            cboDes.removeAllItems();
+            // depIDlist.removeAll(depIDlist);
+            if(DBConnect.rs.next())
+            {
+                 cboDes.addItem(DBConnect.rs.getString(3));
+            while(DBConnect.rs.next()) {
+                cboDes.addItem(DBConnect.rs.getString(3));
+               // depIDlist.add(Integer.toString(DBConnect.rs.getInt(1)));
+            }
+            }
+            else
+            {
+                 cboDes.removeAllItems();
+             cboDes.addItem("No designations");
+            }
+            con.close();
+        } catch (SQLException ex ) {
+            JOptionPane.showMessageDialog(null, ex);
+
+        }
+         }
+         else
+         {
+             cboDes.removeAllItems();
+             cboDes.addItem("No designations");
+         }
+}
     // Displaying the image in a label
    public ImageIcon ResizeImage (String imagePath, byte[] pic) {
     ImageIcon myImage;
     if (imagePath != null) {
     myImage = new ImageIcon (imagePath);
-    } else {
+    } else if ( pic != null)
+    {
     myImage = new ImageIcon (pic);
+    }
+    else
+    {
+        return null;
     }
     Image img = myImage.getImage();
     Image img2 = img.getScaledInstance(lblImage.getWidth(), lblImage.getHeight(), Image.SCALE_SMOOTH);
@@ -76,11 +147,11 @@ for (Component C : p.getComponents())
         jLabel16 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        tblshowemployees = new javax.swing.JTable();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        searchemployee = new javax.swing.JTextField();
+        selecttbl = new javax.swing.JButton();
         Header = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -111,23 +182,22 @@ for (Component C : p.getComponents())
         jScrollPane1 = new javax.swing.JScrollPane();
         txtInfo = new javax.swing.JTextArea();
         cboDep = new javax.swing.JComboBox<>();
-        Jdate = new com.toedter.calendar.JDateChooser();
+        joindate = new com.toedter.calendar.JDateChooser();
         jLabel21 = new javax.swing.JLabel();
         cboPay = new javax.swing.JComboBox<>();
         cboDes = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
-        btnClr = new javax.swing.JLabel();
-        btnSave = new javax.swing.JLabel();
-        btnUpdate = new javax.swing.JLabel();
-        btnDel = new javax.swing.JLabel();
-        btnView = new javax.swing.JLabel();
+        btnCIr = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btnSelect = new javax.swing.JButton();
         btnBack = new javax.swing.JLabel();
 
         ShowEmployees.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         ShowEmployees.setAlwaysOnTop(true);
         ShowEmployees.setBackground(new java.awt.Color(255, 255, 255));
         ShowEmployees.setMinimumSize(new java.awt.Dimension(845, 523));
-        ShowEmployees.setPreferredSize(new java.awt.Dimension(848, 510));
 
         Header1.setBackground(new java.awt.Color(18, 19, 34));
         Header1.setMinimumSize(new java.awt.Dimension(776, 72));
@@ -168,85 +238,99 @@ for (Component C : p.getComponents())
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblshowemployees.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Surname", "Other names", "Address", "Email", "Contacts", "Department", "Designation"
+                "ID", "Surname", "Other names", "Department", "Designation"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
-            jTable1.getColumnModel().getColumn(5).setResizable(false);
-            jTable1.getColumnModel().getColumn(6).setResizable(false);
-            jTable1.getColumnModel().getColumn(7).setResizable(false);
+        tblshowemployees.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane2.setViewportView(tblshowemployees);
+        if (tblshowemployees.getColumnModel().getColumnCount() > 0) {
+            tblshowemployees.getColumnModel().getColumn(0).setResizable(false);
+            tblshowemployees.getColumnModel().getColumn(1).setResizable(false);
+            tblshowemployees.getColumnModel().getColumn(2).setResizable(false);
+            tblshowemployees.getColumnModel().getColumn(3).setResizable(false);
+            tblshowemployees.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.setToolTipText("Filter by department");
-
         jLabel17.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel17.setText("Department");
+        jLabel17.setText("search names or departments or designations");
 
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Search_20px.png"))); // NOI18N
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextField1.setToolTipText("Search by employee name");
+        searchemployee.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        searchemployee.setToolTipText("Search by employee name");
+        searchemployee.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                searchemployeeCaretUpdate(evt);
+            }
+        });
+
+        selecttbl.setBackground(new java.awt.Color(45, 43, 63));
+        selecttbl.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        selecttbl.setForeground(new java.awt.Color(255, 255, 255));
+        selecttbl.setText("Select employee");
+        selecttbl.setBorderPainted(false);
+        selecttbl.setContentAreaFilled(false);
+        selecttbl.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        selecttbl.setOpaque(true);
+        selecttbl.setPreferredSize(new java.awt.Dimension(74, 22));
+        selecttbl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selecttblActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 850, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchemployee, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(289, 289, 289))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1))
+                        .addGap(249, 249, 249)
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(331, 331, 331)
+                        .addComponent(selecttbl, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchemployee, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(selecttbl, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14))
         );
 
         ShowEmployees.getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
@@ -340,6 +424,7 @@ for (Component C : p.getComponents())
         btnBrowse.setForeground(new java.awt.Color(255, 255, 255));
         btnBrowse.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnBrowse.setText("Browse image");
+        btnBrowse.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBrowse.setOpaque(true);
         btnBrowse.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -347,6 +432,7 @@ for (Component C : p.getComponents())
             }
         });
 
+        dob.setDateFormatString("yyyy-MM-dd");
         dob.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         cboGender.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -436,7 +522,7 @@ for (Component C : p.getComponents())
                 .addGroup(personalInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(personalInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(personalInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(personalInfoLayout.createSequentialGroup()
                         .addGroup(personalInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(personalInfoLayout.createSequentialGroup()
@@ -446,8 +532,8 @@ for (Component C : p.getComponents())
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, personalInfoLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(personalInfoLayout.createSequentialGroup()
+                        .addGap(29, 29, 29)
                         .addComponent(btnBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(23, 23, 23))))
         );
@@ -476,17 +562,23 @@ for (Component C : p.getComponents())
 
         cboDep.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         cboDep.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboDep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboDepActionPerformed(evt);
+            }
+        });
 
-        Jdate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        joindate.setDateFormatString("yyyy-MM-dd");
+        joindate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel21.setText("Payment mode");
 
         cboPay.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        cboPay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboPay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cheque", "Cash", "Bank" }));
 
         cboDes.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        cboDes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboDes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please choose department" }));
 
         javax.swing.GroupLayout workInfoLayout = new javax.swing.GroupLayout(workInfo);
         workInfo.setLayout(workInfoLayout);
@@ -500,7 +592,7 @@ for (Component C : p.getComponents())
                             .addGroup(workInfoLayout.createSequentialGroup()
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(31, 31, 31)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
                             .addGroup(workInfoLayout.createSequentialGroup()
                                 .addGroup(workInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4)
@@ -511,7 +603,7 @@ for (Component C : p.getComponents())
                                         .addGap(23, 23, 23)
                                         .addGroup(workInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(cboDep, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(Jdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                            .addComponent(joindate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                     .addGroup(workInfoLayout.createSequentialGroup()
                                         .addGap(25, 25, 25)
                                         .addComponent(cboDes, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
@@ -528,7 +620,7 @@ for (Component C : p.getComponents())
                 .addGap(11, 11, 11)
                 .addGroup(workInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Jdate, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+                    .addComponent(joindate, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
                 .addGap(10, 10, 10)
                 .addGroup(workInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cboDep, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
@@ -551,66 +643,94 @@ for (Component C : p.getComponents())
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new java.awt.GridLayout(2, 3, 10, 5));
 
-        btnClr.setBackground(new java.awt.Color(45, 43, 63));
-        btnClr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnClr.setForeground(new java.awt.Color(255, 255, 255));
-        btnClr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnClr.setText("Clear Fields");
-        btnClr.setOpaque(true);
-        btnClr.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnClrMouseClicked(evt);
+        btnCIr.setBackground(new java.awt.Color(45, 43, 63));
+        btnCIr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnCIr.setForeground(new java.awt.Color(255, 255, 255));
+        btnCIr.setText("Clear Fields");
+        btnCIr.setBorderPainted(false);
+        btnCIr.setContentAreaFilled(false);
+        btnCIr.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCIr.setOpaque(true);
+        btnCIr.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnCIr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCIrActionPerformed(evt);
             }
         });
-        jPanel1.add(btnClr);
+        jPanel1.add(btnCIr);
 
         btnSave.setBackground(new java.awt.Color(45, 43, 63));
         btnSave.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnSave.setForeground(new java.awt.Color(255, 255, 255));
-        btnSave.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnSave.setText("Save");
+        btnSave.setText("Save new");
+        btnSave.setBorderPainted(false);
+        btnSave.setContentAreaFilled(false);
+        btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSave.setOpaque(true);
+        btnSave.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnSave);
 
         btnUpdate.setBackground(new java.awt.Color(45, 43, 63));
         btnUpdate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnUpdate.setText("Update");
+        btnUpdate.setBorderPainted(false);
+        btnUpdate.setContentAreaFilled(false);
+        btnUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUpdate.setEnabled(false);
         btnUpdate.setOpaque(true);
+        btnUpdate.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnUpdate);
 
-        btnDel.setBackground(new java.awt.Color(45, 43, 63));
-        btnDel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnDel.setForeground(new java.awt.Color(255, 255, 255));
-        btnDel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnDel.setText("Delete");
-        btnDel.setOpaque(true);
-        btnDel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnDelMouseClicked(evt);
+        btnDelete.setBackground(new java.awt.Color(45, 43, 63));
+        btnDelete.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnDelete.setForeground(new java.awt.Color(255, 255, 255));
+        btnDelete.setText("Delete");
+        btnDelete.setBorderPainted(false);
+        btnDelete.setContentAreaFilled(false);
+        btnDelete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnDelete.setEnabled(false);
+        btnDelete.setOpaque(true);
+        btnDelete.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
             }
         });
-        jPanel1.add(btnDel);
+        jPanel1.add(btnDelete);
 
-        btnView.setBackground(new java.awt.Color(45, 43, 63));
-        btnView.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnView.setForeground(new java.awt.Color(255, 255, 255));
-        btnView.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnView.setText("View All Employees");
-        btnView.setOpaque(true);
-        btnView.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnViewMouseClicked(evt);
+        btnSelect.setBackground(new java.awt.Color(45, 43, 63));
+        btnSelect.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnSelect.setForeground(new java.awt.Color(255, 255, 255));
+        btnSelect.setText("Select employee");
+        btnSelect.setBorderPainted(false);
+        btnSelect.setContentAreaFilled(false);
+        btnSelect.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSelect.setOpaque(true);
+        btnSelect.setPreferredSize(new java.awt.Dimension(74, 22));
+        btnSelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelectActionPerformed(evt);
             }
         });
-        jPanel1.add(btnView);
+        jPanel1.add(btnSelect);
 
         btnBack.setBackground(new java.awt.Color(18, 19, 34));
         btnBack.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnBack.setForeground(new java.awt.Color(255, 255, 255));
         btnBack.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnBack.setText("Back");
+        btnBack.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBack.setOpaque(true);
         btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -629,9 +749,7 @@ for (Component C : p.getComponents())
                 .addGap(18, 18, 18)
                 .addGroup(BodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(workInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(BodyLayout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 22, Short.MAX_VALUE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         BodyLayout.setVerticalGroup(
@@ -659,7 +777,8 @@ for (Component C : p.getComponents())
         m.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnBackMouseClicked
-
+static File img = null;
+static FileInputStream fis = null;
     private void btnBrowseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBrowseMouseClicked
         // TODO add your handling code here:
         String imgPath = null;
@@ -669,32 +788,263 @@ for (Component C : p.getComponents())
         file.addChoosableFileFilter(filter);
         int result = file.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = file.getSelectedFile();
-            String path = selectedFile.getAbsolutePath();
-            lblImage.setIcon(ResizeImage(path, null));
-            imgPath = path;
+            try {
+                File selectedFile = file.getSelectedFile();
+                String path = selectedFile.getAbsolutePath();
+                lblImage.setIcon(ResizeImage(path, null));
+                img = selectedFile;
+                fis =  new FileInputStream(selectedFile);
+                imgPath = path;
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Employee.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             JOptionPane.showMessageDialog(null, "No File Selected");
         }
     }//GEN-LAST:event_btnBrowseMouseClicked
 
-    private void btnClrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClrMouseClicked
+    private void btnCIrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCIrActionPerformed
         // TODO add your handling code here:
-        clrField(personalInfo);
-        clrField(workInfo);
-    }//GEN-LAST:event_btnClrMouseClicked
 
-    private void btnViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewMouseClicked
-        // TODO add your handling code here:
-        ShowEmployees.setLocationRelativeTo(null);
-        ShowEmployees.setVisible(true);
-    }//GEN-LAST:event_btnViewMouseClicked
+           txtFname.setText("");
+                   txtLname.setText("");
+              txtAddress.setText("");
+               txtmail.setText("");
+                 txtPhone.setText("");
+  txtInfo.setText("");
+  employeenum = "";
+  btnSave.setEnabled(true);
+ btnUpdate.setEnabled(false);
+            btnDelete.setEnabled(false);
+            
+             img = null;
+ fis = null;
+ lblImage.setIcon(ResizeImage(null, null));
+    }//GEN-LAST:event_btnCIrActionPerformed
 
-    private void btnDelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDelMouseClicked
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
+            if(!txtFname.getText().equals(""))
+        {
+         try {
+          Connection con = DBConnect.connect();
         
-    }//GEN-LAST:event_btnDelMouseClicked
+            String sql = "INSERT INTO `employees`(`surname`, `other_names`, `gender`, `dob`, `address`, `email`, `phone`,"
+                    + " `img`, `joindate`, `department`, `designation`, `payment`, `other`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            // java.sql.Date date1 = new java.sql.Date(FromEv.getDate().getTime());
+            //java.sql.Date date2 = new java.sql.Date(ToEv.getDate().getTime());
+            DBConnect.ps = con.prepareStatement(sql);
+            DBConnect.ps.setString(1, txtFname.getText());
+             DBConnect.ps.setString(2, txtLname.getText());
+              DBConnect.ps.setString(3, cboGender.getSelectedItem().toString());
+               java.sql.Date date1 = new java.sql.Date(dob.getDate().getTime());
+               DBConnect.ps.setDate(4, date1);
+               DBConnect.ps.setString(5, txtAddress.getText());
+               DBConnect.ps.setString(6, txtmail.getText());
+               DBConnect.ps.setString(7, txtPhone.getText());
+               DBConnect.ps.setBinaryStream(8, (InputStream)fis, (int)(img.length()));
+            java.sql.Date date2 = new java.sql.Date(joindate.getDate().getTime());
+               DBConnect.ps.setDate(9, date2);
+                  DBConnect.ps.setString(10, cboDep.getSelectedItem().toString());
+   DBConnect.ps.setString(11, cboDes.getSelectedItem().toString());
+ DBConnect.ps.setString(12, cboPay.getSelectedItem().toString());
+  DBConnect.ps.setString(13, txtInfo.getText());
+            DBConnect.ps.execute();
+            JOptionPane.showMessageDialog(null, "NEW RECORD SAVED");
+             con.close();
+                    img = null;
+ fis = null;
+        } catch (SQLException e ) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Name is empty!");
+    }//GEN-LAST:event_btnSaveActionPerformed
 
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+              if("".equals(employeenum))
+        {
+            JOptionPane.showMessageDialog(null, "ID NEEDED. CLICK RECORD FROM TABLE");
+        }
+        else
+        {
+
+            try {
+                 Connection con = DBConnect.connect();
+                String query = "UPDATE `employees` SET `surname`=?,`other_names`=?,"
+                        + "`gender`=?,`dob`=?,`address`=?,`email`=?,`phone`=?,"
+                        + "`img`=?,`joindate`=?,`department`=?,`designation`=?,`payment`"
+                        + "=?,`other`=? where id = ?";
+               DBConnect.ps = con.prepareStatement(query);
+            DBConnect.ps.setString(1, txtFname.getText());
+             DBConnect.ps.setString(2, txtLname.getText());
+              DBConnect.ps.setString(3, cboGender.getSelectedItem().toString());
+               java.sql.Date date1 = new java.sql.Date(dob.getDate().getTime());
+               DBConnect.ps.setDate(4, date1);
+               DBConnect.ps.setString(5, txtAddress.getText());
+               DBConnect.ps.setString(6, txtmail.getText());
+               DBConnect.ps.setString(7, txtPhone.getText());
+               if (lblImage.getIcon() == null || fis == null || img == null) {
+  // this means there is no icon
+   DBConnect.ps.setBinaryStream(8, null);
+}
+               else
+               {
+              DBConnect.ps.setBinaryStream(8, (InputStream)fis, (int)(img.length()));
+               }
+            java.sql.Date date2 = new java.sql.Date(joindate.getDate().getTime());
+               DBConnect.ps.setDate(9, date2);
+                  DBConnect.ps.setString(10, cboDep.getSelectedItem().toString());
+   DBConnect.ps.setString(11, cboDes.getSelectedItem().toString());
+ DBConnect.ps.setString(12, cboPay.getSelectedItem().toString());
+  DBConnect.ps.setString(13, txtInfo.getText());
+  DBConnect.ps.setString(14, employeenum);
+                DBConnect.ps.executeUpdate();
+                JOptionPane.showMessageDialog(null,"RECORD UPDATED SUCCESSFULLY");
+                con.close();
+                      img = null;
+ fis = null;
+            }
+            catch (SQLException ex ) {
+                JOptionPane.showMessageDialog(null, ex);
+
+            }}
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+         if(!"".equals(employeenum)){
+           try {
+              
+            Connection con = DBConnect.connect();
+            String query = "DELETE FROM employees WHERE id = ?";
+            DBConnect.ps = con.prepareStatement(query);
+            DBConnect.ps.setInt  (1, Integer.parseInt(employeenum));
+            DBConnect.ps.executeUpdate();
+            con.close();
+            JOptionPane.showMessageDialog(null, "Record Deleted");
+                   img = null;
+ fis = null;
+        } catch (SQLException e ) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+       txtFname.setText("");
+                   txtLname.setText("");
+              txtAddress.setText("");
+               txtmail.setText("");
+                 txtPhone.setText("");
+                 
+  txtInfo.setText("");
+          btnSave.setEnabled(true);
+             btnUpdate.setEnabled(false);
+            btnDelete.setEnabled(false);
+        employeenum = "";
+        lblImage.setIcon(ResizeImage(null, null));
+         }
+         else
+             JOptionPane.showMessageDialog(null, "ID NEEDED. CLICK RECORD FROM TABLE");
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectActionPerformed
+        // TODO add your handling code here:
+         ShowEmployees.setVisible(true);
+        FillTable(tblshowemployees,"SELECT `id`, `surname` , other_names, department, designation from employees");
+        ShowEmployees.pack();
+        CenteredDialog(ShowEmployees);
+    }//GEN-LAST:event_btnSelectActionPerformed
+
+    private void searchemployeeCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_searchemployeeCaretUpdate
+        // TODO add your handling code here:
+        FillTable(tblshowemployees,"SELECT `id`, `surname` , other_names, department, designation from employees where "
+            + "surname LIKE '%" + searchemployee.getText() + "%' "
+            + " OR other_names LIKE  '%" + searchemployee.getText() + "%' "
+            + "OR department LIKE '%" + searchemployee.getText() + "%' "
+            + "OR designation LIKE '%" + searchemployee.getText() + "%' ");
+    }//GEN-LAST:event_searchemployeeCaretUpdate
+    static String employeenum = "";
+    private void selecttblActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selecttblActionPerformed
+        // TODO add your handling code here:
+             int selectedRow = tblshowemployees.getSelectedRow();
+        String hid = tblshowemployees.getValueAt(selectedRow, 0).toString();
+        try {
+           Connection con = DBConnect.connect();
+            String sql = "select * FROM employees WHERE id = ?";
+            DBConnect.ps = con.prepareStatement(sql);
+            DBConnect.ps.setString(1,hid);
+            DBConnect.rs = DBConnect.ps.executeQuery();
+            if(DBConnect.rs.next()) {
+                       img = null;
+ fis = null;
+                 txtFname.setText(DBConnect.rs.getString(2));
+                   txtLname.setText(DBConnect.rs.getString(3));
+            cboGender.setSelectedItem(DBConnect.rs.getString(4));
+            dob.setDate(DBConnect.rs.getDate(5));
+              txtAddress.setText(DBConnect.rs.getString(6));
+               txtmail.setText(DBConnect.rs.getString(7));
+                 txtPhone.setText(DBConnect.rs.getString(8));
+                 lblImage.setIcon(ResizeImage(null, DBConnect.rs.getBytes(9)));
+           joindate.setDate(DBConnect.rs.getDate(10));
+           cboDep.setSelectedItem(11);
+        cboDes.setSelectedItem(12);
+ cboPay.setSelectedItem(13);
+  txtInfo.setText(DBConnect.rs.getString(14));
+            }
+            con.close();
+             btnUpdate.setEnabled(true);
+            btnDelete.setEnabled(true);
+ btnSave.setEnabled(false);
+        } catch (SQLException ex ) {
+            JOptionPane.showMessageDialog(null, ex);
+
+        }
+        employeenum = hid;
+        ShowEmployees.dispose();
+    }//GEN-LAST:event_selecttblActionPerformed
+
+    private void cboDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDepActionPerformed
+        // TODO add your handling code here:
+        fillDesignation();
+    }//GEN-LAST:event_cboDepActionPerformed
+       public void CenteredDialog(javax.swing.JDialog objFrame)
+{
+        Dimension objDimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int iCoordX = (objDimension.width - objFrame.getWidth()) / 2;
+        int iCoordY = (objDimension.height - objFrame.getHeight()) / 2;
+        objFrame.setLocation(iCoordX, iCoordY); 
+}  
+        public final void FillTable(JTable table, String Query)
+{
+    try
+    {
+       Connection con = DBConnect.connect();
+       DBConnect.ps = con.prepareStatement(Query);
+      DBConnect.rs =  DBConnect.ps.executeQuery();
+         
+        //To remove previously added rows
+        while(table.getRowCount() > 0) 
+        {
+            ((DefaultTableModel) table.getModel()).removeRow(0);
+        }
+        int columns =  DBConnect.rs.getMetaData().getColumnCount();
+        while( DBConnect.rs.next())
+        {  
+            Object[] row = new Object[columns];
+            for (int i = 1; i <= columns; i++)
+            {  
+                row[i - 1] =  DBConnect.rs.getObject(i);
+            }
+            ((DefaultTableModel) table.getModel()).insertRow( DBConnect.rs.getRow()-1,row);
+        }
+
+        con.close();
+    }
+    catch(SQLException e)
+    {
+        JOptionPane.showMessageDialog(this,e);
+    }
+} 
     /**
      * @param args the command line arguments
      */
@@ -735,21 +1085,19 @@ for (Component C : p.getComponents())
     private javax.swing.JPanel Body;
     private javax.swing.JPanel Header;
     private javax.swing.JPanel Header1;
-    private com.toedter.calendar.JDateChooser Jdate;
     private javax.swing.JDialog ShowEmployees;
     private javax.swing.JLabel btnBack;
     private javax.swing.JLabel btnBrowse;
-    private javax.swing.JLabel btnClr;
-    private javax.swing.JLabel btnDel;
-    private javax.swing.JLabel btnSave;
-    private javax.swing.JLabel btnUpdate;
-    private javax.swing.JLabel btnView;
+    private javax.swing.JButton btnCIr;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSelect;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox<String> cboDep;
     private javax.swing.JComboBox<String> cboDes;
     private javax.swing.JComboBox<String> cboGender;
     private javax.swing.JComboBox<String> cboPay;
     private com.toedter.calendar.JDateChooser dob;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -773,10 +1121,12 @@ for (Component C : p.getComponents())
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private com.toedter.calendar.JDateChooser joindate;
     private javax.swing.JLabel lblImage;
     private javax.swing.JPanel personalInfo;
+    private javax.swing.JTextField searchemployee;
+    private javax.swing.JButton selecttbl;
+    private javax.swing.JTable tblshowemployees;
     private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtFname;
     private javax.swing.JTextArea txtInfo;

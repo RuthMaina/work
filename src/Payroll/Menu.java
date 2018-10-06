@@ -373,9 +373,9 @@ for (Component C : panel.getComponents())
 
     private void btnOvertimeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOvertimeMouseClicked
         // TODO add your handling code here:
-        Overtime o = new Overtime();
-        o.setVisible(true);
-        this.setVisible(false);
+      //  Overtime o = new Overtime();
+      //  o.setVisible(true);
+      //  this.setVisible(false);
     }//GEN-LAST:event_btnOvertimeMouseClicked
 
     private void btnAllowancesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAllowancesMouseClicked

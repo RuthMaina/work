@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.1
+-- version 4.8.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2018 at 07:36 AM
--- Server version: 10.1.33-MariaDB
--- PHP Version: 7.2.6
+-- Generation Time: Oct 07, 2018 at 09:59 PM
+-- Server version: 10.1.32-MariaDB
+-- PHP Version: 7.2.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,6 +21,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `payroll`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `attendance`
+--
+
+CREATE TABLE `attendance` (
+  `id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `emp_id` int(11) NOT NULL,
+  `time_from` time NOT NULL,
+  `time_to` time NOT NULL,
+  `hrs` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `attendance`
+--
+
+INSERT INTO `attendance` (`id`, `date`, `emp_id`, `time_from`, `time_to`, `hrs`) VALUES
+(1, '2018-10-07', 1, '21:21:00', '22:21:00', 0);
 
 -- --------------------------------------------------------
 
@@ -76,6 +98,92 @@ INSERT INTO `employees` (`id`, `surname`, `other_names`, `gender`, `dob`, `addre
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `holiday`
+--
+
+CREATE TABLE `holiday` (
+  `id` int(11) NOT NULL,
+  `Holiday` varchar(255) NOT NULL,
+  `overtime` varchar(255) NOT NULL,
+  `rate` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `holiday`
+--
+
+INSERT INTO `holiday` (`id`, `Holiday`, `overtime`, `rate`) VALUES
+(1, 'Madaraka day', 'Cash', 5000),
+(2, 'Christmas', 'None', 0),
+(3, 'Mashujaa Day', 'Percentage', 5),
+(4, 'Boxing Day', 'None', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `holiday_overtime`
+--
+
+CREATE TABLE `holiday_overtime` (
+  `id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `holiday` varchar(255) NOT NULL,
+  `emp_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `holiday_overtime`
+--
+
+INSERT INTO `holiday_overtime` (`id`, `date`, `holiday`, `emp_id`) VALUES
+(1, '2018-10-07', 'Madaraka day', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `leave_management`
+--
+
+CREATE TABLE `leave_management` (
+  `id` int(11) NOT NULL,
+  `emp_id` int(11) NOT NULL,
+  `date_from` date NOT NULL,
+  `date_to` date NOT NULL,
+  `payable` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `leave_management`
+--
+
+INSERT INTO `leave_management` (`id`, `emp_id`, `date_from`, `date_to`, `payable`) VALUES
+(1, 1, '2018-10-07', '2018-10-08', 'No');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `overtime`
+--
+
+CREATE TABLE `overtime` (
+  `id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `emp_id` int(11) NOT NULL,
+  `time_from` time NOT NULL,
+  `time_to` time NOT NULL,
+  `hrs` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `overtime`
+--
+
+INSERT INTO `overtime` (`id`, `date`, `emp_id`, `time_from`, `time_to`, `hrs`) VALUES
+(1, '2018-10-07', 1, '21:28:00', '22:28:00', 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sub_departments`
 --
 
@@ -106,9 +214,9 @@ INSERT INTO `sub_departments` (`id`, `Department`, `Designation`, `OverStatus`, 
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
-  `username` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `type` varchar(100) NOT NULL
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -116,28 +224,40 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `type`) VALUES
-(1, 'adm', '1234', 'Administrator');
+(1, 'admin', '1234', 'Administrator');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `departments`
+-- Indexes for table `attendance`
 --
-ALTER TABLE `departments`
+ALTER TABLE `attendance`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `employees`
+-- Indexes for table `holiday`
 --
-ALTER TABLE `employees`
+ALTER TABLE `holiday`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `sub_departments`
+-- Indexes for table `holiday_overtime`
 --
-ALTER TABLE `sub_departments`
+ALTER TABLE `holiday_overtime`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `leave_management`
+--
+ALTER TABLE `leave_management`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `overtime`
+--
+ALTER TABLE `overtime`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -151,22 +271,34 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT for table `departments`
+-- AUTO_INCREMENT for table `attendance`
 --
-ALTER TABLE `departments`
+ALTER TABLE `attendance`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `holiday`
+--
+ALTER TABLE `holiday`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `employees`
+-- AUTO_INCREMENT for table `holiday_overtime`
 --
-ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `holiday_overtime`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `sub_departments`
+-- AUTO_INCREMENT for table `leave_management`
 --
-ALTER TABLE `sub_departments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `leave_management`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `overtime`
+--
+ALTER TABLE `overtime`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`

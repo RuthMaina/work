@@ -29,8 +29,8 @@ public class Holiday extends javax.swing.JFrame {
     TableFilter table = new TableFilter();
     DefaultTableModel model;
     
-    String holiday = "SELECT * FROM `holiday` WHERE `Holiday` = ?";
-    String hol_over = "SELECT holiday_overtime.*, employee.name FROM holiday_overtime, employee WHERE holiday_overtime.emp_id = employee.id AND holiday_overtime.emp_id = ?";
+    String holiday = "SELECT * FROM `holiday` WHERE `Holiday` LIKE ?";
+    String hol_over = "SELECT holiday_overtime.*, employees.other_names FROM holiday_overtime, employees WHERE holiday_overtime.emp_id = employees.id AND holiday_overtime.emp_id LIKE ?";
 
     /**
      * Creates new form Holiday
@@ -423,6 +423,7 @@ for (Component C : panel.getComponents()) {
         btnCash.setBackground(new java.awt.Color(255, 255, 255));
         holiday_overtime.add(btnCash);
         btnCash.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnCash.setSelected(true);
         btnCash.setText("Cash");
         btnCash.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -678,7 +679,8 @@ for (Component C : panel.getComponents()) {
 
                     String sql = "INSERT INTO `holiday_overtime`(`date`, `holiday`, `emp_id`) VALUES (?, ?, ?)";
                     DBConnect.ps = con.prepareStatement(sql);
-                    DBConnect.ps.setDate(1, (java.sql.Date) Jdate.getDate());
+                    java.sql.Date date1 = new java.sql.Date(Jdate.getDate().getTime());
+                    DBConnect.ps.setDate(1, date1);
                     DBConnect.ps.setString(2, cboHol.getSelectedItem().toString());
                     DBConnect.ps.setInt(3, Integer.parseInt(txtName.getText()));
                     DBConnect.ps.execute();
@@ -799,7 +801,6 @@ for (Component C : panel.getComponents()) {
 
     private void btnSaveSDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveSDepActionPerformed
         // TODO add your handling code here:
-        txtRate.setText("0.0");
         if(!txtHoliday.getText().equals(""))
         {
                 try {

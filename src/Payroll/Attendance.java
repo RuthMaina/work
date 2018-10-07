@@ -6,13 +6,26 @@
 package Payroll;
 
 import static Payroll.Login.user;
+import com.toedter.calendar.JDateChooser;
+import java.awt.Component;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.JTextComponent;
 
 /**
  *
@@ -20,11 +33,17 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Attendance extends javax.swing.JFrame {
     Menu m = new Menu(user);
+    Date date = new Date();
+    DateFormat formatter = new SimpleDateFormat("HH:mm a");
+    TableFilter table = new TableFilter();
+    DBConnect connect = new DBConnect();
+    DefaultTableModel model;
     TableFilter filter = new TableFilter();
     PreparedStatement ps;
     ResultSet rs;
     
-    String leave = "SELECT `leaveID`, `empID`, `dateFrom`, `dateTo`, `total` FROM `empleave` WHERE `empID` = ?";
+    String leave = "SELECT leave_management.id, leave_management.emp_id, employees.other_names, leave_management.date_from, leave_management.date_to, leave_management.payable FROM `employee_management`, employees WHERE employee_management.emp_id = employees.id AND `emp_id` LIKE ?";
+    String attendance = "SELECT attendance.id, attendence.date, attendence.emp_id, employees.other_names, attendence.time_from, attendence.time_to FROM `attendance`, employees WHERE attendence.emp_id = employees.id AND `employee` LIKE ?";
 
     /**
      * Creates new form Employees
@@ -32,6 +51,26 @@ public class Attendance extends javax.swing.JFrame {
     public Attendance() {
         initComponents();
         filter.Filter(tblLeave, leave, txtSearch1);
+        table.Filter(tblAttendance, attendance, txtSearch);
+        jDateChooser1.setDate(date);
+    }
+    
+     // Clear textfields and textareas
+    public void clrFields (JPanel panel) {
+for (Component C : panel.getComponents()) {    
+    if (C instanceof JTextComponent){
+        ((JTextComponent) C).setText(null);
+    }
+  }
+}
+    
+    // Set current date
+    public void setDate (JPanel panel){
+        for (Component c : panel.getComponents()){
+            if (c instanceof JDateChooser){
+                ((JDateChooser) c).setDate(date);
+            }
+        }
     }
 
     /**
@@ -50,11 +89,11 @@ public class Attendance extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jPanel3 = new javax.swing.JPanel();
-        btnClr = new javax.swing.JLabel();
-        btnSave = new javax.swing.JLabel();
-        btnUpdate = new javax.swing.JLabel();
-        btnDel = new javax.swing.JLabel();
-        btnBack = new javax.swing.JLabel();
+        btnClr = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+        btnDel = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAttendance = new javax.swing.JTable();
         txtSearch = new javax.swing.JTextField();
@@ -64,10 +103,9 @@ public class Attendance extends javax.swing.JFrame {
         jLabel25 = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
-        jLabel27 = new javax.swing.JLabel();
-        txtHours = new javax.swing.JTextField();
         timeFrom = new javax.swing.JSpinner();
         timeTo = new javax.swing.JSpinner();
+        jLabel6 = new javax.swing.JLabel();
         jLabel34 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -75,13 +113,12 @@ public class Attendance extends javax.swing.JFrame {
         jLabel29 = new javax.swing.JLabel();
         txtName1 = new javax.swing.JTextField();
         jLabel30 = new javax.swing.JLabel();
-        jLabel31 = new javax.swing.JLabel();
-        txtDays = new javax.swing.JTextField();
         jLabel33 = new javax.swing.JLabel();
         jDateChooser3 = new com.toedter.calendar.JDateChooser();
         jDateChooser4 = new com.toedter.calendar.JDateChooser();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
+        jLabel7 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         btnClr1 = new javax.swing.JLabel();
         btnSave1 = new javax.swing.JLabel();
@@ -110,7 +147,7 @@ public class Attendance extends javax.swing.JFrame {
             HeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(HeaderLayout.createSequentialGroup()
                 .addGap(225, 225, 225)
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE)
                 .addGap(263, 263, 263))
         );
         HeaderLayout.setVerticalGroup(
@@ -142,45 +179,74 @@ public class Attendance extends javax.swing.JFrame {
         btnClr.setBackground(new java.awt.Color(45, 43, 63));
         btnClr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnClr.setForeground(new java.awt.Color(255, 255, 255));
-        btnClr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnClr.setText("Clear Fields");
-        btnClr.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnClr.setBorderPainted(false);
+        btnClr.setContentAreaFilled(false);
         btnClr.setOpaque(true);
+        btnClr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClrActionPerformed(evt);
+            }
+        });
         jPanel3.add(btnClr);
 
         btnSave.setBackground(new java.awt.Color(45, 43, 63));
         btnSave.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnSave.setForeground(new java.awt.Color(255, 255, 255));
-        btnSave.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnSave.setText("Save");
+        btnSave.setBorderPainted(false);
+        btnSave.setContentAreaFilled(false);
         btnSave.setOpaque(true);
+        btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSaveMouseClicked(evt);
+            }
+        });
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
         jPanel3.add(btnSave);
 
         btnUpdate.setBackground(new java.awt.Color(45, 43, 63));
         btnUpdate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnUpdate.setText("Update");
+        btnUpdate.setBorderPainted(false);
+        btnUpdate.setContentAreaFilled(false);
         btnUpdate.setOpaque(true);
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
         jPanel3.add(btnUpdate);
 
         btnDel.setBackground(new java.awt.Color(45, 43, 63));
         btnDel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnDel.setForeground(new java.awt.Color(255, 255, 255));
-        btnDel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnDel.setText("Delete");
+        btnDel.setBorderPainted(false);
+        btnDel.setContentAreaFilled(false);
         btnDel.setOpaque(true);
+        btnDel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDelActionPerformed(evt);
+            }
+        });
         jPanel3.add(btnDel);
 
         btnBack.setBackground(new java.awt.Color(18, 19, 34));
         btnBack.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnBack.setForeground(new java.awt.Color(255, 255, 255));
-        btnBack.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnBack.setText("Back");
+        btnBack.setBorderPainted(false);
+        btnBack.setContentAreaFilled(false);
         btnBack.setOpaque(true);
-        btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnBackMouseClicked(evt);
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
             }
         });
         jPanel3.add(btnBack);
@@ -188,17 +254,17 @@ public class Attendance extends javax.swing.JFrame {
         tblAttendance.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblAttendance.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "IT", null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, "1", null, "IT", null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Employee ID", "Time From", "Time To", "Hours absent"
+                "id", "Date", "Employee ID", "Name", "Time From", "Time To"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -206,12 +272,15 @@ public class Attendance extends javax.swing.JFrame {
             }
         });
         tblAttendance.setRowHeight(20);
+        tblAttendance.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblAttendance);
         if (tblAttendance.getColumnModel().getColumnCount() > 0) {
             tblAttendance.getColumnModel().getColumn(0).setResizable(false);
             tblAttendance.getColumnModel().getColumn(1).setResizable(false);
             tblAttendance.getColumnModel().getColumn(2).setResizable(false);
             tblAttendance.getColumnModel().getColumn(3).setResizable(false);
+            tblAttendance.getColumnModel().getColumn(4).setResizable(false);
+            tblAttendance.getColumnModel().getColumn(5).setResizable(false);
         }
 
         txtSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -237,26 +306,18 @@ public class Attendance extends javax.swing.JFrame {
         });
 
         jLabel24.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel24.setText("Employee ID");
-
-        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel27.setText("Hours absent");
-
-        txtHours.setEditable(false);
-        txtHours.setBackground(new java.awt.Color(255, 255, 255));
-        txtHours.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtHours.setToolTipText("e.g. 2:00 pm");
+        jLabel24.setText("Employee id");
 
         timeFrom.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         timeFrom.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), null, null, java.util.Calendar.HOUR_OF_DAY));
         JSpinner.DateEditor de = new JSpinner.DateEditor(timeFrom, "hh:mm a");
         timeFrom.setEditor(de);
         timeFrom.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-                timeFromCaretPositionChanged(evt);
-            }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
                 timeFromInputMethodTextChanged(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+                timeFromCaretPositionChanged(evt);
             }
         });
 
@@ -265,32 +326,39 @@ public class Attendance extends javax.swing.JFrame {
         JSpinner.DateEditor ds = new JSpinner.DateEditor(timeTo, "hh:mm a");
         timeTo.setEditor(ds);
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Search_20px.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtHours)
-                    .addComponent(timeTo, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(timeTo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
                     .addComponent(timeFrom)
-                    .addComponent(txtName))
-                .addGap(127, 127, 127))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
+                        .addComponent(txtName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -299,11 +367,7 @@ public class Attendance extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(timeTo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtHours, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         jLabel34.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -316,21 +380,21 @@ public class Attendance extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                        .addGap(143, 143, 143)))
+                        .addGap(55, 55, 55)
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(txtSearch))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -345,17 +409,16 @@ public class Attendance extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 6, Short.MAX_VALUE))
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 48, Short.MAX_VALUE))
+                        .addGap(0, 40, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
 
@@ -376,24 +439,16 @@ public class Attendance extends javax.swing.JFrame {
         jLabel30.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel30.setText("Employee ID");
 
-        jLabel31.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel31.setText("Total days");
-
-        txtDays.setEditable(false);
-        txtDays.setBackground(new java.awt.Color(255, 255, 255));
-        txtDays.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtDays.setToolTipText("e.g. 2:00 pm");
-
         jLabel33.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel33.setText("Pay on leave");
 
         jDateChooser3.setBackground(new java.awt.Color(255, 255, 255));
         jDateChooser3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jDateChooser3.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
                 jDateChooser3InputMethodTextChanged(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
         });
 
@@ -403,12 +458,17 @@ public class Attendance extends javax.swing.JFrame {
         jRadioButton1.setBackground(new java.awt.Color(255, 255, 255));
         Pay.add(jRadioButton1);
         jRadioButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jRadioButton1.setSelected(true);
         jRadioButton1.setText("Yes");
 
         jRadioButton2.setBackground(new java.awt.Color(255, 255, 255));
         Pay.add(jRadioButton2);
         jRadioButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jRadioButton2.setText("No");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Search_20px.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -418,42 +478,37 @@ public class Attendance extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtDays)
-                        .addGap(188, 188, 188))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel30, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jDateChooser4, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                        .addGap(130, 130, 130))
+                        .addComponent(jDateChooser4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(83, 83, 83)
-                                .addComponent(txtName1))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jRadioButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jRadioButton2))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jDateChooser3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(130, 130, 130))))
+                        .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jDateChooser3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel30, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtName1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtName1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtName1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -462,16 +517,12 @@ public class Attendance extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jDateChooser4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDays, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jRadioButton1)
                     .addComponent(jRadioButton2))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
@@ -484,6 +535,11 @@ public class Attendance extends javax.swing.JFrame {
         btnClr1.setText("Clear Fields");
         btnClr1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnClr1.setOpaque(true);
+        btnClr1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnClr1MouseClicked(evt);
+            }
+        });
         jPanel6.add(btnClr1);
 
         btnSave1.setBackground(new java.awt.Color(45, 43, 63));
@@ -492,6 +548,11 @@ public class Attendance extends javax.swing.JFrame {
         btnSave1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnSave1.setText("Save");
         btnSave1.setOpaque(true);
+        btnSave1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSave1MouseClicked(evt);
+            }
+        });
         jPanel6.add(btnSave1);
 
         btnUpdate1.setBackground(new java.awt.Color(45, 43, 63));
@@ -500,6 +561,11 @@ public class Attendance extends javax.swing.JFrame {
         btnUpdate1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnUpdate1.setText("Update");
         btnUpdate1.setOpaque(true);
+        btnUpdate1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnUpdate1MouseClicked(evt);
+            }
+        });
         jPanel6.add(btnUpdate1);
 
         btnDel1.setBackground(new java.awt.Color(45, 43, 63));
@@ -531,17 +597,17 @@ public class Attendance extends javax.swing.JFrame {
         tblLeave.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblLeave.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, "1", "IT", null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, "1", null, "IT", null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Employee ID", "Date From", "Date To", "Leave days"
+                "ID", "Employee ID", "Employee Name", "Date From", "Date To", "Payable"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -549,6 +615,7 @@ public class Attendance extends javax.swing.JFrame {
             }
         });
         tblLeave.setRowHeight(20);
+        tblLeave.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(tblLeave);
         if (tblLeave.getColumnModel().getColumnCount() > 0) {
             tblLeave.getColumnModel().getColumn(0).setResizable(false);
@@ -556,6 +623,7 @@ public class Attendance extends javax.swing.JFrame {
             tblLeave.getColumnModel().getColumn(2).setResizable(false);
             tblLeave.getColumnModel().getColumn(3).setResizable(false);
             tblLeave.getColumnModel().getColumn(4).setResizable(false);
+            tblLeave.getColumnModel().getColumn(5).setResizable(false);
         }
 
         txtSearch1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -577,15 +645,15 @@ public class Attendance extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 491, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(txtSearch1))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -595,7 +663,7 @@ public class Attendance extends javax.swing.JFrame {
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -612,12 +680,6 @@ public class Attendance extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseClicked
-        // TODO add your handling code here:
-        m.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnBackMouseClicked
-
     private void timeFromInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_timeFromInputMethodTextChanged
        // TODO add your handling code here:
     }//GEN-LAST:event_timeFromInputMethodTextChanged
@@ -628,6 +690,8 @@ public class Attendance extends javax.swing.JFrame {
 
     private void btnBack1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBack1MouseClicked
         // TODO add your handling code here:
+        m.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnBack1MouseClicked
 
     private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
@@ -640,14 +704,13 @@ public class Attendance extends javax.swing.JFrame {
         int selectedRowIndex = tblLeave.getSelectedRow();
         try {
             Connection con = DBConnect.connect();
-            ps = con.prepareStatement("DELETE FROM `empleave` WHERE `leaveID` = ?");
+            ps = con.prepareStatement("DELETE FROM `leave_management` WHERE `id` = ?");
             ps.setString(1, model.getValueAt(selectedRowIndex, 0).toString());
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Data Deleted Successfully");
-            
-            filter.Filter(tblLeave, leave, txtSearch1);
-            
-            
+            JOptionPane.showMessageDialog(null, "Record deleted successfully", null, INFORMATION_MESSAGE);
+            table.Filter(tblLeave, leave, txtSearch1);
+                    clrFields(jPanel5);
+                    setDate(jPanel5);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -666,6 +729,219 @@ public class Attendance extends javax.swing.JFrame {
     private void jDateChooser3InputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jDateChooser3InputMethodTextChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_jDateChooser3InputMethodTextChanged
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        m.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnClrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClrActionPerformed
+        // TODO add your handling code here:
+        clrFields(jPanel4);
+        setDate(jPanel1);
+    }//GEN-LAST:event_btnClrActionPerformed
+
+    private void btnDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActionPerformed
+        // TODO add your handling code here:
+        Connection con = DBConnect.connect();
+        try {
+            model = (DefaultTableModel) tblAttendance.getModel();
+            int selectedRow = tblAttendance.getSelectedRow();
+            
+            DBConnect.ps = con.prepareStatement("DELETE FROM attendance WHERE id = ?");
+            DBConnect.ps.setInt(1, (int) model.getValueAt(selectedRow, 1));
+            DBConnect.ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Record deleted successfully", null, INFORMATION_MESSAGE);
+             table.Filter(tblAttendance, attendance, txtSearch);
+             clrFields(jPanel4);
+             setDate(jPanel1);
+        } catch (SQLException e) {
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Attendance.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnDelActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+      if(!txtName.getText().equals(""))
+        {
+                try {
+                    Connection con = DBConnect.connect();
+
+                    String sql = "INSERT INTO `attendance`(`date`, `emp_id`, `time_from`, `time_to`) VALUES (?, ?, ?, ?)";
+                    DBConnect.ps = con.prepareStatement(sql);
+                    java.sql.Date date1 = new java.sql.Date(jDateChooser1.getDate().getTime());
+                    DBConnect.ps.setDate(1, date1);
+                    DBConnect.ps.setInt(2, Integer.parseInt(txtName.getText()));
+                    
+                    Object value1 = timeFrom.getValue();
+            if (value1 instanceof Date) {
+                String times = formatter.format(value1);
+                try {
+                    java.sql.Time timeValue = new java.sql.Time(formatter.parse(times).getTime());
+                    DBConnect.ps.setTime(3, timeValue);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Overtime.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            
+            
+            Object value2 = timeTo.getValue();
+            if (value2 instanceof Date) {
+                String times1 = formatter.format(value2);
+                try {
+                    java.sql.Time timeValue1 = new java.sql.Time(formatter.parse(times1).getTime());
+                    DBConnect.ps.setTime(4, timeValue1);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Overtime.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+                    
+                    DBConnect.ps.execute();
+                    JOptionPane.showMessageDialog(null, "Record Saved");
+                    table.Filter(tblAttendance, attendance, txtSearch);
+                    clrFields(jPanel4);
+                    setDate(jPanel1);
+                    con.close();
+                } catch (SQLException e ) {
+                    JOptionPane.showMessageDialog(null, e);
+                }
+        }
+        else
+        JOptionPane.showMessageDialog(null, "Some fields are empty");
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnClr1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClr1MouseClicked
+        // TODO add your handling code here:
+        clrFields(jPanel5);
+        setDate(jPanel5);
+    }//GEN-LAST:event_btnClr1MouseClicked
+
+    private void btnSave1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSave1MouseClicked
+        // TODO add your handling code here:
+        if(!txtName1.getText().equals(""))
+        {
+                try {
+                    Connection con = DBConnect.connect();
+
+                    String sql = "INSERT INTO `leave_management`(`emp_id`, `date_from`, `date_to`, `payable`) VALUES (?, ?, ?, ?)";
+                    DBConnect.ps = con.prepareStatement(sql);
+                    DBConnect.ps.setInt(1, Integer.parseInt(txtName1.getText()));
+                    java.sql.Date date1 = new java.sql.Date(jDateChooser3.getDate().getTime());
+                    DBConnect.ps.setDate(2, date1);
+                    java.sql.Date date2 = new java.sql.Date(jDateChooser4.getDate().getTime());
+                    DBConnect.ps.setDate(3, date2);
+                    if(jRadioButton1.isSelected()){
+                    DBConnect.ps.setString(4, "Yes");
+                }
+                else if(jRadioButton2.isSelected())
+                {
+                    DBConnect.ps.setString(4, "No");
+                }
+                    DBConnect.ps.execute();
+                    JOptionPane.showMessageDialog(null, "Record Saved");
+                    table.Filter(tblLeave, leave, txtSearch1);
+                    clrFields(jPanel5);
+                    setDate(jPanel5);
+                    con.close();
+                } catch (SQLException e ) {
+                    JOptionPane.showMessageDialog(null, e);
+                }
+        }
+        else
+        JOptionPane.showMessageDialog(null, "Some fields are empty");
+    }//GEN-LAST:event_btnSave1MouseClicked
+
+    private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSaveMouseClicked
+
+    private void btnUpdate1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdate1MouseClicked
+        // TODO add your handling code here:
+        model = (DefaultTableModel) tblLeave.getModel();
+            int selectedRow = tblLeave.getSelectedRow();
+            try {
+                Connection con = DBConnect.connect();
+                String query = "UPDATE `leave_management` SET `emp_id` = ?,`date_from` = ?,`date_to` = ?,`payable` = ? WHERE `id` = ?";
+                DBConnect.ps = con.prepareStatement(query);
+                DBConnect.ps.setString(1, txtName1.getText());
+                java.sql.Date date1 = new java.sql.Date(jDateChooser3.getDate().getTime());
+                    DBConnect.ps.setDate(2, date1);
+                    java.sql.Date date2 = new java.sql.Date(jDateChooser4.getDate().getTime());
+                    DBConnect.ps.setDate(3, date2);
+                 if(jRadioButton1.isSelected()){
+                    DBConnect.ps.setString(4, "Yes");
+                }
+                else if(jRadioButton2.isSelected())
+                {
+                    DBConnect.ps.setString(4, "No");
+                }
+                DBConnect.ps.setInt(5, Integer.parseInt((String) model.getValueAt(selectedRow, 0)));
+
+                DBConnect.ps.executeUpdate();
+                JOptionPane.showMessageDialog(null,"Record successfully updated");
+                table.Filter(tblLeave, leave, txtSearch1);
+                    clrFields(jPanel5);
+                    setDate(jPanel5);
+                con.close();
+            }
+            catch (SQLException ex ) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+    }//GEN-LAST:event_btnUpdate1MouseClicked
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        model = (DefaultTableModel) tblAttendance.getModel();
+            int selectedRow = tblAttendance.getSelectedRow();
+            try {
+                Connection con = DBConnect.connect();
+                String query = "UPDATE `attendance` SET `date` = ?,`emp_id` = ?,`time_from` = ?,`time_to` = ? WHERE `id` = ?";
+                DBConnect.ps = con.prepareStatement(query);
+               java.sql.Date date1 = new java.sql.Date(jDateChooser1.getDate().getTime());
+                    DBConnect.ps.setDate(1, date1);
+                    
+                    DBConnect.ps.setInt(2, Integer.parseInt(txtName.getText()));
+                    Object value1 = timeFrom.getValue();
+            if (value1 instanceof Date) {
+                String times = formatter.format(value1);
+                try {
+                    java.sql.Time timeValue = new java.sql.Time(formatter.parse(times).getTime());
+                    DBConnect.ps.setTime(3, timeValue);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Overtime.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            Object value2 = timeTo.getValue();
+            if (value2 instanceof Date) {
+                String times1 = formatter.format(value2);
+                try {
+                    java.sql.Time timeValue1 = new java.sql.Time(formatter.parse(times1).getTime());
+                    DBConnect.ps.setTime(4, timeValue1);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Overtime.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+                DBConnect.ps.setInt(4, Integer.parseInt((String) model.getValueAt(selectedRow, 0)));
+
+                DBConnect.ps.executeUpdate();
+                JOptionPane.showMessageDialog(null,"Record successfully updated");
+                table.Filter(tblAttendance, attendance, txtSearch);
+                    clrFields(jPanel4);
+                    setDate(jPanel1);
+                con.close();
+            }
+            catch (SQLException ex ) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
     /**
      * @param args the command line arguments
@@ -708,15 +984,15 @@ public class Attendance extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Header;
     private javax.swing.ButtonGroup Pay;
-    private javax.swing.JLabel btnBack;
+    private javax.swing.JButton btnBack;
     private javax.swing.JLabel btnBack1;
-    private javax.swing.JLabel btnClr;
+    private javax.swing.JButton btnClr;
     private javax.swing.JLabel btnClr1;
-    private javax.swing.JLabel btnDel;
+    private javax.swing.JButton btnDel;
     private javax.swing.JLabel btnDel1;
-    private javax.swing.JLabel btnSave;
+    private javax.swing.JButton btnSave;
     private javax.swing.JLabel btnSave1;
-    private javax.swing.JLabel btnUpdate;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.JLabel btnUpdate1;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDateChooser3;
@@ -724,15 +1000,15 @@ public class Attendance extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -749,8 +1025,6 @@ public class Attendance extends javax.swing.JFrame {
     private javax.swing.JTable tblLeave;
     private javax.swing.JSpinner timeFrom;
     private javax.swing.JSpinner timeTo;
-    private javax.swing.JTextField txtDays;
-    private javax.swing.JTextField txtHours;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtName1;
     private javax.swing.JTextField txtSearch;

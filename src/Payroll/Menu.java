@@ -380,10 +380,16 @@ for (Component C : panel.getComponents())
 
     private void btnAllowancesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAllowancesMouseClicked
         // TODO add your handling code here:
+        Allowance a = new Allowance();
+        a.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnAllowancesMouseClicked
 
     private void btnDeductionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeductionsMouseClicked
         // TODO add your handling code here:
+        Deductions d = new Deductions();
+        d.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnDeductionsMouseClicked
 
     private void btnAnalysisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAnalysisMouseClicked

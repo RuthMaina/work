@@ -41,7 +41,7 @@ public class Overtime extends javax.swing.JFrame {
     PreparedStatement ps;
     ResultSet rs;
     
-    String overtime = "SELECT overtime.id, overtime.date, overtime.emp_id, employees.other_names, overtime.time_from, overtime.time_to FROM `overtime`, employees WHERE overtime.emp_id = employees.id AND `employee` LIKE ?";
+    String overtime = "SELECT overtime.id, overtime.date, overtime.emp_id, employees.other_names, overtime.time_from, overtime.time_to FROM `overtime`, employees WHERE overtime.emp_id = employees.id AND overtime.emp_id LIKE ?";
 
     /**
      * Creates new form Overtime
@@ -151,6 +151,11 @@ for (Component C : panel.getComponents()) {
         btnClr.setBorderPainted(false);
         btnClr.setContentAreaFilled(false);
         btnClr.setOpaque(true);
+        btnClr.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnClrMouseClicked(evt);
+            }
+        });
         btnClr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClrActionPerformed(evt);
@@ -222,17 +227,17 @@ for (Component C : panel.getComponents()) {
         tblOvertime.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         tblOvertime.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, "1", null, "IT", null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, "1", null, "IT", null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Date", "Employee ID", "Name", "Time From", "Time To"
+                "id", "Date", "Employee ID", "Name", "Time From", "Time To"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -241,10 +246,28 @@ for (Component C : panel.getComponents()) {
         });
         tblOvertime.setRowHeight(20);
         tblOvertime.getTableHeader().setReorderingAllowed(false);
+        tblOvertime.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblOvertimeMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblOvertime);
+        if (tblOvertime.getColumnModel().getColumnCount() > 0) {
+            tblOvertime.getColumnModel().getColumn(0).setResizable(false);
+            tblOvertime.getColumnModel().getColumn(1).setResizable(false);
+            tblOvertime.getColumnModel().getColumn(2).setResizable(false);
+            tblOvertime.getColumnModel().getColumn(3).setResizable(false);
+            tblOvertime.getColumnModel().getColumn(4).setResizable(false);
+            tblOvertime.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         txtSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtSearch.setToolTipText("Search by employee ID");
+        txtSearch.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtSearchCaretUpdate(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -390,7 +413,7 @@ for (Component C : panel.getComponents()) {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1001, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -554,6 +577,39 @@ for (Component C : panel.getComponents()) {
     private void timeFromCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_timeFromCaretPositionChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_timeFromCaretPositionChanged
+
+    private void tblOvertimeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOvertimeMouseClicked
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            model = (DefaultTableModel) tblOvertime.getModel();
+            int selectedRow = tblOvertime.getSelectedRow();
+            
+            Date dates = new SimpleDateFormat("dd-MM-yyyy").parse(model.getValueAt(selectedRow, 1).toString());
+            jDateChooser1.setDate(dates);
+            txtName.setText(model.getValueAt(selectedRow, 2).toString());
+            
+            Object timevalue = model.getValueAt(selectedRow, 4);
+            timeFrom.setValue(timevalue);
+            
+            Object timevalue1 = model.getValueAt(selectedRow, 5);
+            timeTo.setValue(timevalue1);
+            
+        } catch (ParseException ex) {
+            Logger.getLogger(Holiday.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tblOvertimeMouseClicked
+
+    private void btnClrMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClrMouseClicked
+        // TODO add your handling code here:
+        clrFields(jPanel4);
+        setDate(jPanel2);
+    }//GEN-LAST:event_btnClrMouseClicked
+
+    private void txtSearchCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtSearchCaretUpdate
+        // TODO add your handling code here:
+        table.Filter(tblOvertime, overtime, txtSearch);
+    }//GEN-LAST:event_txtSearchCaretUpdate
 
     /**
      * @param args the command line arguments

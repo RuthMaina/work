@@ -42,8 +42,8 @@ public class Attendance extends javax.swing.JFrame {
     PreparedStatement ps;
     ResultSet rs;
     
-    String leave = "SELECT leave_management.id, leave_management.emp_id, employees.other_names, leave_management.date_from, leave_management.date_to, leave_management.payable FROM `employee_management`, employees WHERE employee_management.emp_id = employees.id AND `emp_id` LIKE ?";
-    String attendance = "SELECT attendance.id, attendence.date, attendence.emp_id, employees.other_names, attendence.time_from, attendence.time_to FROM `attendance`, employees WHERE attendence.emp_id = employees.id AND `employee` LIKE ?";
+    String leave = "SELECT leave_management.id, leave_management.emp_id, employees.other_names, leave_management.date_from, leave_management.date_to, leave_management.payable FROM `leave_management`, employees WHERE leave_management.emp_id = employees.id AND leave_management.`emp_id` LIKE ?";
+    String attendance = "SELECT attendance.id, attendance.date, attendance.emp_id, employees.other_names, attendance.time_from, attendance.time_to FROM `attendance`, employees WHERE attendance.emp_id = employees.id AND attendance.emp_id LIKE ?";
 
     /**
      * Creates new form Employees
@@ -273,6 +273,11 @@ for (Component C : panel.getComponents()) {
         });
         tblAttendance.setRowHeight(20);
         tblAttendance.getTableHeader().setReorderingAllowed(false);
+        tblAttendance.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblAttendanceMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblAttendance);
         if (tblAttendance.getColumnModel().getColumnCount() > 0) {
             tblAttendance.getColumnModel().getColumn(0).setResizable(false);
@@ -285,6 +290,11 @@ for (Component C : panel.getComponents()) {
 
         txtSearch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtSearch.setToolTipText("Search by employee ID");
+        txtSearch.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtSearchCaretUpdate(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -616,6 +626,11 @@ for (Component C : panel.getComponents()) {
         });
         tblLeave.setRowHeight(20);
         tblLeave.getTableHeader().setReorderingAllowed(false);
+        tblLeave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblLeaveMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblLeave);
         if (tblLeave.getColumnModel().getColumnCount() > 0) {
             tblLeave.getColumnModel().getColumn(0).setResizable(false);
@@ -631,6 +646,11 @@ for (Component C : panel.getComponents()) {
         txtSearch1.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 txtSearch1CaretUpdate(evt);
+            }
+        });
+        txtSearch1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearch1ActionPerformed(evt);
             }
         });
 
@@ -942,6 +962,66 @@ for (Component C : panel.getComponents()) {
                 JOptionPane.showMessageDialog(null, ex);
             }
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void tblAttendanceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAttendanceMouseClicked
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            model = (DefaultTableModel) tblAttendance.getModel();
+            int selectedRow = tblAttendance.getSelectedRow();
+            
+            Date dates = new SimpleDateFormat("dd-MM-yyyy").parse(model.getValueAt(selectedRow, 1).toString());
+            jDateChooser1.setDate(dates);
+            txtName.setText(model.getValueAt(selectedRow, 2).toString());
+            
+            Object timevalue = model.getValueAt(selectedRow, 4);
+            timeFrom.setValue(timevalue);
+            
+            Object timevalue1 = model.getValueAt(selectedRow, 5);
+            timeTo.setValue(timevalue1);
+            
+        } catch (ParseException ex) {
+            Logger.getLogger(Holiday.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tblAttendanceMouseClicked
+
+    private void tblLeaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLeaveMouseClicked
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            model = (DefaultTableModel) tblLeave.getModel();
+            int selectedRow = tblLeave.getSelectedRow();
+            
+            txtName1.setText(model.getValueAt(selectedRow, 1).toString());
+            Date dates = new SimpleDateFormat("dd-MM-yyyy").parse(model.getValueAt(selectedRow, 3).toString());
+            jDateChooser3.setDate(dates);
+            Date dates1 = new SimpleDateFormat("dd-MM-yyyy").parse(model.getValueAt(selectedRow, 4).toString());
+            jDateChooser4.setDate(dates1);
+            String payable = (String) model.getValueAt(selectedRow, 5);
+            if (payable == "Yes") {
+                jRadioButton1.setSelected(true);
+                jRadioButton2.setSelected(false);
+            }
+            else if (payable == "NO") {
+                jRadioButton2.setSelected(true);
+                jRadioButton1.setSelected(false);
+            }
+            
+            
+        } catch (ParseException ex) {
+            Logger.getLogger(Holiday.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tblLeaveMouseClicked
+
+    private void txtSearch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearch1ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtSearch1ActionPerformed
+
+    private void txtSearchCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtSearchCaretUpdate
+        // TODO add your handling code here:
+        table.Filter(tblAttendance, attendance, txtSearch);
+    }//GEN-LAST:event_txtSearchCaretUpdate
 
     /**
      * @param args the command line arguments
